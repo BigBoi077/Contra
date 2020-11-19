@@ -24,4 +24,8 @@ public class Buffer {
         graphics.setPaint(paint);
         graphics.drawString(text, x, y);
     }
+
+    public void drawImage(Image image, int x, int y) {
+        graphics.drawImage(image, x, y, null);
+    }
 }

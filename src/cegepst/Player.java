@@ -1,14 +1,12 @@
 package cegepst;
 
 import cegepst.engine.Buffer;
-import cegepst.engine.controls.MovementController;
 import cegepst.engine.entity.ControllableEntity;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 public class Player extends ControllableEntity {
 
@@ -16,26 +14,21 @@ public class Player extends ControllableEntity {
     private GamePad gamePad;
     private SpriteReader spriteReader;
     private BufferedImage spriteSheet;
+    private Animator animator;
 
-    private Image[] gunningLeft;
     private Image[] gunningRight;
 
-    private Image[] runningLeft;
     private Image[] runningRight;
 
-    private Image[] jumpingLeft;
     private Image[] jumpingRight;
 
-    private Image[] crouchLeft;
-    private Image[] crouchRight;
+    private BufferedImage crouchRight;
 
-    private Image[] deathLeft;
-    private Image[] deathRight;
+    private BufferedImage deathSprite;
 
     public Player(GamePad gamePad) {
         super(gamePad);
         this.gamePad = gamePad;
-        this.spriteReader = new SpriteReader();
         super.setDimension(30, 30);
         super.setSpeed(2);
         initSpriteSheets();
@@ -45,25 +38,32 @@ public class Player extends ControllableEntity {
     private void initSpriteSheets() {
         ImagesReader imagesReader = new ImagesReader();
         spriteSheet = imagesReader.readImage(SPRITE_PATH);
+        this.spriteReader = new SpriteReader(spriteSheet);
     }
 
     private void initSprites() {
-        gunningLeft = new Image[2];
         gunningRight = new Image[2];
-        runningLeft = new Image[5];
+
         runningRight = new Image[5];
-        jumpingLeft = new Image[4];
+
         jumpingRight = new Image[4];
-        crouchLeft = new Image[1];
-        crouchRight = new Image[1];
-        deathLeft = new Image[5];
-        deathRight = new Image[5];
+
+        crouchRight = new BufferedImage(17, 34, TYPE_INT_RGB);;
+
+        deathSprite = new BufferedImage(11, 34, TYPE_INT_RGB);;
         readSprites();
     }
 
     private void readSprites() {
-        SpriteReader spriteReader = new SpriteReader();
-        gunningLeft = spriteReader.readSprite(spriteSheet, xPositionStart, yPositionStart, int imageWidth, int imagesHeight, gunningLeft.lenth());
+        spriteReader.readSpriteSheet(gunningRight, PlayerSpritesheetInfo.GUNNING_FRAMES_START_X, PlayerSpritesheetInfo.GUNNING_FRAMES_START_Y, PlayerSpritesheetInfo.GUNNING_WIDTH, PlayerSpritesheetInfo.CROUCH_HEIGHT, gunningRight.length);
+
+        spriteReader.readSpriteSheet(runningRight, PlayerSpritesheetInfo.RUNNING_FRAMES_START_X, PlayerSpritesheetInfo.RUNNING_FRAMES_START_Y, PlayerSpritesheetInfo.RUNNING_WIDTH, PlayerSpritesheetInfo.RUNNING_HEIGHT, runningRight.length);
+
+        spriteReader.readSpriteSheet(jumpingRight, PlayerSpritesheetInfo.JUMPING_FRAMES_START_X, PlayerSpritesheetInfo.JUMPING_FRAMES_START_Y, PlayerSpritesheetInfo.JUMPING_WIDTH, PlayerSpritesheetInfo.JUMPING_HEIGHT, jumpingRight.length);
+
+        crouchRight = spriteReader.readSingleFrame(PlayerSpritesheetInfo.CROUCH_FRAME_START_X, PlayerSpritesheetInfo.CROUCH_FRAME_START_Y, PlayerSpritesheetInfo.CROUCH_WIDTH, PlayerSpritesheetInfo.CROUCH_HEIGHT);
+
+        deathSprite = spriteReader.readSingleFrame(PlayerSpritesheetInfo.DEATH_FRAME_START_X, PlayerSpritesheetInfo.DEATH_FRAME_START_Y, PlayerSpritesheetInfo.DEATH_WIDTH, PlayerSpritesheetInfo.DEATH_HEIGHT);
     }
 
     @Override
@@ -72,11 +72,14 @@ public class Player extends ControllableEntity {
         if (gamePad.isJumpPressed()) {
             super.startJump();
         }
+        animato
     }
 
     @Override
     public void draw(Buffer buffer) {
-        buffer.drawRectangle(x, y, width, height, Color.GREEN);
-        //drawHitBox(buffer);
+        buffer.drawImage(x, y, width, height, Color.GREEN);
+        if (GameSettings.DEBUG_ENABLED) {
+            drawHitBox(buffer);
+        }
     }
 }
