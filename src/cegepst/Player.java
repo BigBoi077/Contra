@@ -62,6 +62,8 @@ public class Player extends ControllableEntity {
     }
 
     private void readSprites() {
+        SpriteReader spriteReader = new SpriteReader();
+        gunningLeft = spriteReader.readSprite(spriteSheet, xPositionStart, yPositionStart, int imageWidth, int imagesHeight, gunningLeft.lenth());
     }
 
     @Override
