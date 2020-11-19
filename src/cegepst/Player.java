@@ -33,6 +33,7 @@ public class Player extends ControllableEntity {
         super.setSpeed(2);
         initClassContent();
         CollidableRepository.getInstance().registerEntity(this);
+        currentActiveSprites = gunningRight;
     }
 
     public Bullet fire() {
@@ -49,8 +50,9 @@ public class Player extends ControllableEntity {
         super.update();
         updateFireCooldown();
         updateCurrentSprite();
-        if (isCrouching()) {
-            animator.drawCurrentAnimation(crouchRight);
+        updateCurrentSprites();
+        if (!isCrouching()) {
+            animator.updateAnimation(currentActiveSprites);
         }
         if (gamePad.isJumpPressed()) {
             super.startJump();
@@ -59,7 +61,11 @@ public class Player extends ControllableEntity {
 
     @Override
     public void draw(Buffer buffer) {
-        animator.drawCurrentAnimation(crouchRight);
+        if (isCrouching()) {
+            animator.drawCurrentAnimation(currentActiveSprite, buffer);
+        } else {
+            animator.drawCurrentAnimation(currentActiveSprites, buffer);
+        }
         if (GameSettings.DEBUG_ENABLED) {
             drawHitBox(buffer);
         }
@@ -87,7 +93,6 @@ public class Player extends ControllableEntity {
         jumpingRight = new Image[4];
         crouchRight = new BufferedImage(17, 34, TYPE_INT_RGB);
         deathSprite = new BufferedImage(11, 34, TYPE_INT_RGB);
-        currentActiveSprite = null;
         readSprites();
     }
 
@@ -107,12 +112,22 @@ public class Player extends ControllableEntity {
     }
 
     private void updateCurrentSprite() {
-        if (isCrouching()) {
+        if (isCrouching() && getDirection() == Direction.RIGHT) {
             currentActiveSprite = crouchRight;
-        } else if (getDirection() == Direction.LEFT) {
+        } else if (isCrouching() && getDirection() == Direction.RIGHT) {
+            currentActiveSprite = spriteReader.flip(crouchRight);
+        }
+    }
+
+    private void updateCurrentSprites() {
+        if (getDirection() == Direction.LEFT) {
             currentActiveSprites = spriteReader.flipSprite(runningRight);
         } else if (getDirection() == Direction.RIGHT) {
             currentActiveSprites = runningRight;
+        } else if (jumping && getDirection() == Direction.RIGHT) {
+            currentActiveSprites = jumpingRight;
+        } else if (jumping && getDirection() == Direction.LEFT) {
+            currentActiveSprites = spriteReader.flipSprite(jumpingRight);
         }
     }
 

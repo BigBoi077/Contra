@@ -1,5 +1,7 @@
 package cegepst;
 
+import cegepst.engine.Buffer;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -27,10 +29,13 @@ public class Animator {
         } else {
             currentAnimationFrame = 1; // return to idle frame
         }
-        drawCurrentAnimation((BufferedImage) currentActiveSprites[currentAnimationFrame]);
     }
 
-    public void drawCurrentAnimation(BufferedImage currentSprite) {
+    public void drawCurrentAnimation(BufferedImage currentSprite, Buffer buffer) {
+        buffer.drawImage(currentSprite, player.getX(), player.getY());
+    }
 
+    public void drawCurrentAnimation(Image[] images, Buffer buffer) {
+        buffer.drawImage(images[currentAnimationFrame], player.getX(), player.getY());
     }
 }

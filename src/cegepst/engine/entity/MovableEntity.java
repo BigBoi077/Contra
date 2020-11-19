@@ -18,7 +18,7 @@ public abstract class MovableEntity extends UpdatableEntity {
     private double jumpSpeed = 4;
     private int jumpMaxHeight = 24; // jumping max
     private int currentJumpMeter = 0;
-    private boolean jumping = false;
+    protected boolean jumping = false;
     private boolean falling = false;
 
     public MovableEntity() {
