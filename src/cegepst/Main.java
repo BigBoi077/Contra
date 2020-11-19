@@ -33,7 +33,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        Contra game = new Contra();
+        ContraGame game = new ContraGame();
         game.start();
     }
 }

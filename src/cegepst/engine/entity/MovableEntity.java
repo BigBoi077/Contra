@@ -14,7 +14,7 @@ public abstract class MovableEntity extends UpdatableEntity {
     private boolean moved;
     private int lastX;
     private int lastY;
-    private double gravity = 1; // falling speed;
+    protected double gravity = 1; // falling speed;
     private double jumpSpeed = 4;
     private int jumpMaxHeight = 24; // jumping max
     private int currentJumpMeter = 0;
@@ -60,6 +60,11 @@ public abstract class MovableEntity extends UpdatableEntity {
             currentJumpMeter = 0;
             jumpSpeed = 4; // reset
         }
+    }
+
+    public void setDimensions(int width, int height) {
+        this.width = width;
+        this.height = height;
     }
 
     private void fall() {

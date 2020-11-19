@@ -9,10 +9,12 @@ public class GamePad extends MovementController {
 
     private int quitKey = KeyEvent.VK_Q;
     private int jumpKey = KeyEvent.VK_SPACE;
+    private int fireKey = KeyEvent.VK_ENTER;
 
     public GamePad() {
         super.bindKey(quitKey);
         super.bindKey(jumpKey);
+        super.bindKey(fireKey);
         RenderingEngine.getInstance().addInputListener(this);
     }
 
@@ -22,5 +24,9 @@ public class GamePad extends MovementController {
 
     public boolean isQuitPressed() {
         return super.isKeyPressed(quitKey);
+    }
+
+    public boolean isFirePressed() {
+        return super.isKeyPressed(fireKey);
     }
 }

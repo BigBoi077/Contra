@@ -6,13 +6,14 @@ import cegepst.engine.entity.StaticEntity;
 
 import java.util.ArrayList;
 
-public class Contra extends Game {
+public class ContraGame extends Game {
 
     private Player player;
     private GamePad gamePad;
     private ArrayList<Brick> bricks;
+    private ArrayList<Bullet> bullets;
 
-    public Contra() {
+    public ContraGame() {
         gamePad = new GamePad();
         player = new Player(gamePad);
         player.teleport(245, 10);
@@ -39,6 +40,9 @@ public class Contra extends Game {
         player.update();
         if (gamePad.isQuitPressed()) {
             super.stop();
+        }
+        if (gamePad.isFirePressed()) {
+            bullets.add(player.fire());
         }
     }
 
