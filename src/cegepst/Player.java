@@ -28,9 +28,12 @@ public class Player extends ControllableEntity {
     private BufferedImage crouchRight;
     private BufferedImage crouchLeft;
     private BufferedImage deathSprite;
-    private BufferedImage currentActiveSprite;
+    private BufferedImage currentSprite;
     private int fireCooldow;
     private int numberLives;
+    private static final int ANIMATION_SPEED = 8;
+    private int nextFrame;
+    private int currentAnimationFrame;
 
     public Player(GamePad gamePad) {
         super(gamePad);
@@ -56,12 +59,15 @@ public class Player extends ControllableEntity {
     public void update() {
         super.update();
         updateFireCooldown();
-        updateCurrentSprite();
-        updateCurrentSprites();
-        if (isCrouching()) {
-
+        updatePlayerSize();
+        if (hasMoved()) {
+            if (isRunning()) {
+                animator.cycleRunningFrames();
+            } else if (isJumping()) {
+                animator.cycleJumpingFrames();
+            }
         } else {
-            animator.updateAnimation(currentActiveSprites);
+            animator.cycleGunningFrames();
         }
         if (gamePad.isJumpPressed()) {
             super.startJump();
@@ -70,15 +76,32 @@ public class Player extends ControllableEntity {
 
     @Override
     public void draw(Buffer buffer) {
-        if (isCrouching()) {
-            animator.drawCurrentAnimation(currentActiveSprite, buffer);
-        } else {
-            animator.drawCurrentAnimation(currentActiveSprites, buffer);
+        if (isRunning() && isMoving(Direction.RIGHT)) {
+            buffer.drawImage(runningRight[currentAnimationFrame], x, y);
+        } else if (isRunning() && isMoving(Direction.LEFT)) {
+            buffer.drawImage(runningLeft[currentAnimationFrame], x, y);
+        } else if (isGunning() && isMoving(Direction.RIGHT)) {
+            buffer.drawImage(gunningRight[currentAnimationFrame], x, y);
+        } else if (isGunning() && isMoving(Direction.LEFT)) {
+            buffer.drawImage(gunningLeft[currentAnimationFrame], x, y);
+        } else if (isJumping() && isMoving(Direction.RIGHT)) {
+            buffer.drawImage(jumpingRight[currentAnimationFrame], x, y);
+        } else if (isJumping() && isMoving(Direction.LEFT)) {
+            buffer.drawImage(jumpingLeft[currentAnimationFrame], x, y);
+        } else if (isCrouching() && isMoving(Direction.RIGHT)) {
+            buffer.drawImage(crouchRight, x, y);
+        } else if (isCrouching() && isMoving(Direction.LEFT)) {
+            buffer.drawImage(crouchLeft, x, y);
         }
+
         if (GameSettings.DEBUG_ENABLED) {
             drawHitBox(buffer);
         }
         hud.draw(this, buffer);
+    }
+
+    private boolean isMoving(Direction direction) {
+        return getDirection() == direction;
     }
 
     private void initClassContent() {
@@ -135,34 +158,42 @@ public class Player extends ControllableEntity {
 
     private void updateCurrentSprite() {
         if (isCrouching() && getDirection() == Direction.RIGHT) {
-            currentActiveSprite = crouchRight;
+            currentSprite = crouchRight;
         } else if (isCrouching() && getDirection() == Direction.RIGHT) {
-            currentActiveSprite = crouchLeft;
+            currentSprite = crouchLeft;
         }
     }
 
-    private void updateCurrentSprites() {
-        if (getDirection() == Direction.LEFT) {
-            currentActiveSprites = runningLeft;
-        } else if (getDirection() == Direction.RIGHT) {
-            currentActiveSprites = runningRight;
-        } else if (jumping && getDirection() == Direction.RIGHT) {
-            currentActiveSprites = jumpingRight;
-        } else if (jumping && getDirection() == Direction.LEFT) {
-            currentActiveSprites = jumpingLeft;
-        } else if (isFiring() && getDirection() == Direction.RIGHT) {
-            currentActiveSprites = gunningRight;
-        } else if (isFiring() && getDirection() == Direction.LEFT) {
-            currentActiveSprites = gunningLeft;
+    private void updatePlayerSize() {
+        if (isRunning()) {
+            height = PlayerSpritesheetInfo.RUNNING_HEIGHT;
+            width = PlayerSpritesheetInfo.RUNNING_WIDTH;
+        } else if (isGunning()) {
+            height = PlayerSpritesheetInfo.GUNNING_HEIGHT;
+            width = PlayerSpritesheetInfo.GUNNING_WIDTH;
+        } else if (isJumping()) {
+            height = PlayerSpritesheetInfo.JUMPING_HEIGHT;
+            width = PlayerSpritesheetInfo.JUMPING_WIDTH;
+        } else if (isCrouching()) {
+            height = PlayerSpritesheetInfo.CROUCH_HEIGHT;
+            width = PlayerSpritesheetInfo.CROUCH_WIDTH;
         }
-    }
-
-    private boolean isFiring() {
-        return gamePad.isFirePressed();
     }
 
     public boolean isCrouching() {
-        return getDirection() == Direction.DOWN && super.gravity == 1 && super.falling == false;
+        return gamePad.isCrouchPressed() && super.gravity == 1 && super.falling == false;
+    }
+
+    private boolean isRunning() {
+        return getDirection() == Direction.LEFT || getDirection() == Direction.RIGHT;
+    }
+
+    private boolean isGunning() {
+        return isRunning() && gamePad.isFirePressed();
+    }
+
+    private boolean isJumping() {
+        return jumping;
     }
 
     public int getNumberLives() {

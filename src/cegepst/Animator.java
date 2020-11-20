@@ -31,11 +31,20 @@ public class Animator {
         }
     }
 
+    public void cycleRunningFrames() {
+    }
+
+    public void cycleGunningFrames() {
+    }
+
+    public void cycleJumpingFrames() {
+    }
+
     public void drawCurrentAnimation(BufferedImage currentSprite, Buffer buffer) {
         buffer.drawImage(currentSprite, player.getX(), player.getY());
     }
 
     public void drawCurrentAnimation(Image[] images, Buffer buffer) {
-        buffer.drawImage(images[currentAnimationFrame], player.getX(), player.getY());
+        buffer.drawImage(images[0], player.getX(), player.getY());
     }
 }

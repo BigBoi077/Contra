@@ -1,5 +1,6 @@
 package cegepst.engine.entity;
 
+import cegepst.Debuger;
 import cegepst.GameSettings;
 import cegepst.engine.Buffer;
 import cegepst.engine.controls.Direction;
@@ -14,12 +15,13 @@ public abstract class MovableEntity extends UpdatableEntity {
     private boolean moved;
     private int lastX;
     private int lastY;
-    protected double gravity = 1; // falling speed;
+    protected double gravity = 3; // falling speed;
     private double jumpSpeed = 4;
-    private int jumpMaxHeight = 24; // jumping max
+    private int jumpMaxHeight = 30; // jumping max
     private int currentJumpMeter = 0;
     protected boolean jumping = false;
     protected boolean falling = false;
+    private boolean isGravityApplied = GameSettings.APPLY_GRAVITY;
 
     public MovableEntity() {
         collision = new Collision(this);
@@ -110,17 +112,18 @@ public abstract class MovableEntity extends UpdatableEntity {
     }
 
     public void move(Direction direction) {
-        if (jumping) {
-            // Limit movement in midair (jump mobility)
-            collision.setSpeed(direction == Direction.UP ? (int) jumpSpeed : 2);
-        } else if (falling) {
-            // Limit movement in midair (fall mobility)
-            collision.setSpeed((direction == Direction.DOWN) ? (int) gravity : 2);
-        } else {
-            // Make sure to apply basic speed for other cases
-            collision.setSpeed(speed);
+        if (isGravityApplied) {
+            if (jumping) {
+                // Limit movement in midair (jump mobility)
+                collision.setSpeed(direction == Direction.UP ? (int) jumpSpeed : 2);
+            } else if (falling) {
+                // Limit movement in midair (fall mobility)
+                collision.setSpeed((direction == Direction.DOWN) ? (int) gravity : 2);
+            } else {
+                // Make sure to apply basic speed for other cases
+                collision.setSpeed(speed);
+            }
         }
-
         this.direction = direction;
         int allowedSpeed = collision.getAllowedSpeed(direction);
         x += direction.getVelocityX(allowedSpeed);

@@ -42,14 +42,20 @@ public class ContraGame extends Game {
         if (gamePad.isQuitPressed()) {
             super.stop();
         }
-        if (gamePad.isFirePressed()) {
+        if (gamePad.isFirePressed() && player.canFire()) {
             bullets.add(player.fire());
+        }
+        for (Bullet bullet : bullets) {
+            bullet.update();
         }
     }
 
     @Override
     public void draw(Buffer buffer) {
         for (StaticEntity entity : bricks) {
+            entity.draw(buffer);
+        }
+        for (StaticEntity entity : bullets) {
             entity.draw(buffer);
         }
         player.draw(buffer);
