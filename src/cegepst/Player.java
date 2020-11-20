@@ -14,6 +14,7 @@ public class Player extends ControllableEntity {
 
     private static final String SPRITE_PATH = "images/PlayerSprites.png";
     private GamePad gamePad;
+    private HUD hud;
     private SpriteReader spriteReader;
     private BufferedImage spriteSheet;
     private Animator animator;
@@ -29,10 +30,12 @@ public class Player extends ControllableEntity {
     private BufferedImage deathSprite;
     private BufferedImage currentActiveSprite;
     private int fireCooldow;
+    private int numberLives;
 
     public Player(GamePad gamePad) {
         super(gamePad);
         this.gamePad = gamePad;
+        this.numberLives = GameSettings.NUMBER_PLAYER_LIVES;
         super.setDimension(30, 30);
         super.setSpeed(2);
         initClassContent();
@@ -55,7 +58,9 @@ public class Player extends ControllableEntity {
         updateFireCooldown();
         updateCurrentSprite();
         updateCurrentSprites();
-        if (!isCrouching()) {
+        if (isCrouching()) {
+
+        } else {
             animator.updateAnimation(currentActiveSprites);
         }
         if (gamePad.isJumpPressed()) {
@@ -73,16 +78,18 @@ public class Player extends ControllableEntity {
         if (GameSettings.DEBUG_ENABLED) {
             drawHitBox(buffer);
         }
+        hud.draw(this, buffer);
     }
 
     private void initClassContent() {
         initSpriteSheets();
         initSprites();
-        initAnimator();
+        initUtilitiesClasses();
     }
 
-    private void initAnimator() {
+    private void initUtilitiesClasses() {
         this.animator = new Animator(this);
+        this.hud = new HUD();
     }
 
     private void initSpriteSheets() {
@@ -143,10 +150,22 @@ public class Player extends ControllableEntity {
             currentActiveSprites = jumpingRight;
         } else if (jumping && getDirection() == Direction.LEFT) {
             currentActiveSprites = jumpingLeft;
+        } else if (isFiring() && getDirection() == Direction.RIGHT) {
+            currentActiveSprites = gunningRight;
+        } else if (isFiring() && getDirection() == Direction.LEFT) {
+            currentActiveSprites = gunningLeft;
         }
     }
 
+    private boolean isFiring() {
+        return gamePad.isFirePressed();
+    }
+
     public boolean isCrouching() {
-        return getDirection() == Direction.DOWN && super.gravity == 1;
+        return getDirection() == Direction.DOWN && super.gravity == 1 && super.falling == false;
+    }
+
+    public int getNumberLives() {
+        return numberLives;
     }
 }

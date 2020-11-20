@@ -19,7 +19,7 @@ public abstract class MovableEntity extends UpdatableEntity {
     private int jumpMaxHeight = 24; // jumping max
     private int currentJumpMeter = 0;
     protected boolean jumping = false;
-    private boolean falling = false;
+    protected boolean falling = false;
 
     public MovableEntity() {
         collision = new Collision(this);
