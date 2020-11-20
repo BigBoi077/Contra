@@ -18,6 +18,7 @@ public class ContraGame extends Game {
         player = new Player(gamePad);
         player.teleport(245, 10);
         bricks = new ArrayList<>();
+        bullets = new ArrayList<>();
         bricks.add(new Brick(250, 250));
         bricks.add(new Brick(400, 250));
         bricks.add(new Brick(350, 450));
