@@ -11,8 +11,14 @@ public class SpriteReader {
         this.spriteSheet = spriteSheet;
     }
 
-    public void readSpriteSheet(Image[] spriteArray, int xPositionStart, int yPositionStart, int imageWidth, int imagesHeight, int nbrFrames) {
+    public void readRightSpriteSheet(Image[] spriteArray, int xPositionStart, int yPositionStart, int imageWidth, int imagesHeight, int nbrFrames) {
         for (int i = 0; i < nbrFrames; i++, xPositionStart += imageWidth) {
+            spriteArray[i] = spriteSheet.getSubimage(xPositionStart, yPositionStart, imageWidth, imagesHeight);
+        }
+    }
+
+    public void readLeftSpriteSheet(Image[] spriteArray, int xPositionStart, int yPositionStart, int imageWidth, int imagesHeight, int nbrFrames) {
+        for (int i = 0; i < nbrFrames; i++, xPositionStart -= imageWidth) {
             spriteArray[i] = spriteSheet.getSubimage(xPositionStart, yPositionStart, imageWidth, imagesHeight);
         }
     }
