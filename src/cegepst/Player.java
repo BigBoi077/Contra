@@ -13,11 +13,13 @@ import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 public class Player extends ControllableEntity {
 
     private static final String SPRITE_PATH = "images/PlayerSprites.png";
+    private static final int ANIMATION_SPEED = 8;
     private GamePad gamePad;
     private HUD hud;
     private SpriteReader spriteReader;
     private BufferedImage spriteSheet;
     private Animator animator;
+    private Direction lastDirection;
     private Image[] gunningRight;
     private Image[] runningRight;
     private Image[] jumpingRight;
@@ -29,30 +31,30 @@ public class Player extends ControllableEntity {
     private BufferedImage crouchLeft;
     private BufferedImage deathSprite;
     private BufferedImage currentSprite;
-    private int fireCooldow;
+    private int fireCooldown;
     private int numberLives;
-    private static final int ANIMATION_SPEED = 8;
     private int nextFrame;
     private int currentAnimationFrame;
 
     public Player(GamePad gamePad) {
         super(gamePad);
+        super.isGravityApplied = true;
         this.gamePad = gamePad;
         this.numberLives = GameSettings.NUMBER_PLAYER_LIVES;
         super.setDimension(30, 30);
-        super.setSpeed(2);
+        super.setSpeed(4);
         initClassContent();
         CollidableRepository.getInstance().registerEntity(this);
         currentActiveSprites = gunningRight;
     }
 
     public Bullet fire() {
-        fireCooldow = 10;
+        fireCooldown = 10;
         return new Bullet(this);
     }
 
     public Boolean canFire() {
-        return fireCooldow == 0;
+        return fireCooldown == 0;
     }
 
     @Override
@@ -60,6 +62,7 @@ public class Player extends ControllableEntity {
         super.update();
         updateFireCooldown();
         updatePlayerSize();
+        moveAccordingToHandler();
         if (hasMoved()) {
             if (isRunning()) {
                 animator.cycleRunningFrames();
@@ -72,28 +75,31 @@ public class Player extends ControllableEntity {
         if (gamePad.isJumpPressed()) {
             super.startJump();
         }
+        lastDirection = getDirection();
     }
 
     @Override
     public void draw(Buffer buffer) {
-        if (isRunning() && isMoving(Direction.RIGHT)) {
-            buffer.drawImage(runningRight[currentAnimationFrame], x, y);
-        } else if (isRunning() && isMoving(Direction.LEFT)) {
-            buffer.drawImage(runningLeft[currentAnimationFrame], x, y);
-        } else if (isGunning() && isMoving(Direction.RIGHT)) {
-            buffer.drawImage(gunningRight[currentAnimationFrame], x, y);
+
+        if (isGunning() && isMoving(Direction.RIGHT)) {
+            buffer.drawImage(gunningRight[0], x, y);
         } else if (isGunning() && isMoving(Direction.LEFT)) {
-            buffer.drawImage(gunningLeft[currentAnimationFrame], x, y);
+            buffer.drawImage(gunningLeft[0], x, y);
         } else if (isJumping() && isMoving(Direction.RIGHT)) {
-            buffer.drawImage(jumpingRight[currentAnimationFrame], x, y);
+            buffer.drawImage(jumpingRight[0], x, y);
         } else if (isJumping() && isMoving(Direction.LEFT)) {
-            buffer.drawImage(jumpingLeft[currentAnimationFrame], x, y);
+            buffer.drawImage(jumpingLeft[0], x, y);
         } else if (isCrouching() && isMoving(Direction.RIGHT)) {
             buffer.drawImage(crouchRight, x, y);
         } else if (isCrouching() && isMoving(Direction.LEFT)) {
             buffer.drawImage(crouchLeft, x, y);
+        } else if (isMoving(Direction.RIGHT)) {
+            buffer.drawImage(runningRight[0], x, y);
+        } else if (isMoving(Direction.LEFT)) {
+            buffer.drawImage(runningLeft[0], x, y);
+        } else {
+            buffer.drawImage(runningRight[currentAnimationFrame], x, y);
         }
-
         if (GameSettings.DEBUG_ENABLED) {
             drawHitBox(buffer);
         }
@@ -101,7 +107,7 @@ public class Player extends ControllableEntity {
     }
 
     private boolean isMoving(Direction direction) {
-        return getDirection() == direction;
+        return lastDirection == direction;
     }
 
     private void initClassContent() {
@@ -150,9 +156,9 @@ public class Player extends ControllableEntity {
     }
 
     private void updateFireCooldown() {
-        fireCooldow--;
-        if (fireCooldow <=0) {
-            fireCooldow = 0;
+        fireCooldown--;
+        if (fireCooldown <=0) {
+            fireCooldown = 0;
         }
     }
 
@@ -165,23 +171,20 @@ public class Player extends ControllableEntity {
     }
 
     private void updatePlayerSize() {
-        if (isRunning()) {
-            height = PlayerSpritesheetInfo.RUNNING_HEIGHT;
-            width = PlayerSpritesheetInfo.RUNNING_WIDTH;
-        } else if (isGunning()) {
+       if (isGunning()) {
             height = PlayerSpritesheetInfo.GUNNING_HEIGHT;
             width = PlayerSpritesheetInfo.GUNNING_WIDTH;
-        } else if (isJumping()) {
-            height = PlayerSpritesheetInfo.JUMPING_HEIGHT;
-            width = PlayerSpritesheetInfo.JUMPING_WIDTH;
-        } else if (isCrouching()) {
-            height = PlayerSpritesheetInfo.CROUCH_HEIGHT;
-            width = PlayerSpritesheetInfo.CROUCH_WIDTH;
-        }
+       } else if (isJumping()) {
+           height = PlayerSpritesheetInfo.JUMPING_HEIGHT;
+           width = PlayerSpritesheetInfo.JUMPING_WIDTH;
+       } else if (isCrouching()) {
+           height = PlayerSpritesheetInfo.CROUCH_HEIGHT;
+           width = PlayerSpritesheetInfo.CROUCH_WIDTH;
+       }
     }
 
     public boolean isCrouching() {
-        return gamePad.isCrouchPressed() && super.gravity == 1 && super.falling == false;
+        return gamePad.isCrouchPressed() && super.falling == false;
     }
 
     private boolean isRunning() {
@@ -189,11 +192,11 @@ public class Player extends ControllableEntity {
     }
 
     private boolean isGunning() {
-        return isRunning() && gamePad.isFirePressed();
+        return gamePad.isFirePressed();
     }
 
     private boolean isJumping() {
-        return jumping;
+        return gamePad.isJumpPressed();
     }
 
     public int getNumberLives() {

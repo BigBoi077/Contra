@@ -11,17 +11,19 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     private final Collision collision;
     private Direction direction = Direction.UP;
-    protected int speed = 1;
+    protected int speed;
     private boolean moved;
     private int lastX;
     private int lastY;
-    protected double gravity = 3; // falling speed;
-    private double jumpSpeed = 4;
-    private int jumpMaxHeight = 30; // jumping max
+    private int jumpMaxHeight = 25; // jumping max
     private int currentJumpMeter = 0;
+    protected double gravity = 4; // falling speed;
+    private double jumpSpeed = 4;
+    protected int definedAllowedSpeed;
     protected boolean jumping = false;
     protected boolean falling = false;
-    private boolean isGravityApplied = GameSettings.APPLY_GRAVITY;
+    protected boolean isGravityApplied;
+    protected boolean isDefinedAllowedSpeed;
 
     public MovableEntity() {
         collision = new Collision(this);
@@ -30,7 +32,7 @@ public abstract class MovableEntity extends UpdatableEntity {
     @Override
     public void update() { // done first before any other action
 
-        if (GameSettings.GRAVITY_ENABLED) {
+        if (GameSettings.GRAVITY_ENABLED && isGravityApplied) {
             // Are we jumping?
             if (jumping) {
                 jump();
@@ -98,21 +100,21 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     public void moveUp() {
         // Force to use semantic methods jump
-        if (GameSettings.GRAVITY_ENABLED) {
+        if (GameSettings.GRAVITY_ENABLED && isGravityApplied) {
             return;
         }
         move(Direction.UP);
     }
 
     public void moveDown() {
-        if (GameSettings.GRAVITY_ENABLED) {
+        if (GameSettings.GRAVITY_ENABLED && isGravityApplied) {
             return;
         }
         move(Direction.DOWN);
     }
 
     public void move(Direction direction) {
-        if (isGravityApplied) {
+        if (GameSettings.GRAVITY_ENABLED && isGravityApplied) {
             if (jumping) {
                 // Limit movement in midair (jump mobility)
                 collision.setSpeed(direction == Direction.UP ? (int) jumpSpeed : 2);
@@ -126,6 +128,9 @@ public abstract class MovableEntity extends UpdatableEntity {
         }
         this.direction = direction;
         int allowedSpeed = collision.getAllowedSpeed(direction);
+        if (isDefinedAllowedSpeed) {
+            allowedSpeed = definedAllowedSpeed;
+        }
         x += direction.getVelocityX(allowedSpeed);
         y += direction.getVelocityY(allowedSpeed);
     }

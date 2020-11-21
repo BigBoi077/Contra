@@ -39,6 +39,7 @@ public class ContraGame extends Game {
     @Override
     public void update() {
         player.update();
+        Debuger.consoleLog(player.getSpeed());
         if (gamePad.isQuitPressed()) {
             super.stop();
         }

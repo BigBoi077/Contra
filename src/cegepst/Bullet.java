@@ -10,11 +10,12 @@ import java.awt.*;
 public class Bullet extends MovableEntity {
 
     private Direction playerDirection;
-    private boolean isBullet = true;
 
     public Bullet(Player player) {
-        super.setSpeed(7);
+        super.setSpeed(6);
+        super.isDefinedAllowedSpeed = true;
         super.setDimensions(4, 4);
+        super.isGravityApplied = false;
         playerDirection = player.getDirection();
         if (playerDirection == Direction.RIGHT) {
             super.teleport(player.getX() + player.getWidth() + 1, player.getY() + 15 - 2);
@@ -30,6 +31,7 @@ public class Bullet extends MovableEntity {
     public void update() {
         super.update();
         super.move(playerDirection);
+        super.definedAllowedSpeed = 10;
         if (x >= 820 || x < 0) {
             CollidableRepository.getInstance().unregisterEntity(this);
         }

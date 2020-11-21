@@ -8,18 +8,18 @@ public class PlayerSpritesheetInfo {
     public static final int GUNNING_LEFT_FRAMES_START_X = 111;
     public static final int GUNNING_LEFT_FRAMES_START_Y = 18;
 
-    public static final int RUNNING_WIDTH = 23;
+    public static final int RUNNING_WIDTH = 25;
     public static final int RUNNING_HEIGHT = 36;
-    public static final int RUNNING_RIGHT_FRAMES_START_X = 145;
+    public static final int RUNNING_RIGHT_FRAMES_START_X = 140;
     public static final int RUNNING_RIGHT_FRAMES_START_Y = 134;
-    public static final int RUNNING_LEFT_FRAMES_START_X = 135;
+    public static final int RUNNING_LEFT_FRAMES_START_X = 115;
     public static final int RUNNING_LEFT_FRAMES_START_Y = 134;
 
     public static final int JUMPING_WIDTH = 21;
     public static final int JUMPING_HEIGHT = 20;
     public static final int RIGHT_JUMPING_FRAMES_START_X = 183;
     public static final int RIGHT_JUMPING_FRAMES_START_Y = 171;
-    public static final int LEFT_JUMPING_FRAMES_START_X = 97;
+    public static final int LEFT_JUMPING_FRAMES_START_X = 75;
     public static final int LEFT_JUMPING_FRAMES_START_Y = 171;
 
     public static final int CROUCH_WIDTH = 34;
