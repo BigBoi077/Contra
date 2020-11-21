@@ -79,24 +79,39 @@ public class Player extends ControllableEntity {
 
     @Override
     public void draw(Buffer buffer) {
-        if (isGunning() && isMoving(Direction.RIGHT)) {
-            buffer.drawImage(gunningRightFrames[animator.currentAnimationFrame], x, y);
-        } else if (isGunning() && isMoving(Direction.LEFT)) {
-            buffer.drawImage(gunningLeftFrames[animator.currentAnimationFrame], x, y);
-        } else if (isJumping() && isMoving(Direction.RIGHT)) {
-            buffer.drawImage(jumpingRightFrames[animator.currentAnimationFrame], x, y);
-        } else if (isJumping() && isMoving(Direction.LEFT)) {
-            buffer.drawImage(jumpingLeftFrames[animator.currentAnimationFrame], x, y);
-        } else if (isCrouching() && isMoving(Direction.RIGHT)) {
-            buffer.drawImage(crouchRight, x, y);
-        } else if (isCrouching() && isMoving(Direction.LEFT)) {
-            buffer.drawImage(crouchLeft, x, y);
-        } else if (isMoving(Direction.RIGHT)) {
-            buffer.drawImage(runningRightFrames[animator.currentAnimationFrame], x, y);
-        } else if (isMoving(Direction.LEFT)) {
-            buffer.drawImage(runningLeftFrames[animator.currentAnimationFrame], x, y);
-        } else {
-            buffer.drawImage(runningRightFrames[animator.currentAnimationFrame], x, y);
+        if (isJumping()) {
+            if (animator.currentAnimationFrame > jumpingRightFrames.length - 1) {
+                animator.currentAnimationFrame = 0;
+            }
+            if (isMoving(Direction.RIGHT)) {
+                animator.drawCurrentAnimation(jumpingRightFrames, buffer);
+            } else {
+                animator.drawCurrentAnimation(jumpingLeftFrames, buffer);
+            }
+        } else if (isGunning()) {
+            if (animator.currentAnimationFrame > gunningRightFrames.length - 1) {
+                animator.currentAnimationFrame = 0;
+            }
+            if (isMoving(Direction.RIGHT)) {
+                animator.drawCurrentAnimation(gunningRightFrames, buffer);
+            } else {
+                animator.drawCurrentAnimation(gunningLeftFrames, buffer);
+            }
+        } else if (isRunning()) {
+            if (animator.currentAnimationFrame > runningRightFrames.length - 1) {
+                animator.currentAnimationFrame = 0;
+            }
+            if (isMoving(Direction.RIGHT)) {
+                animator.drawCurrentAnimation(runningRightFrames, buffer);
+            } else {
+                animator.drawCurrentAnimation(runningLeftFrames, buffer);
+            }
+        } else if (isCrouching()) {
+            if (isMoving(Direction.RIGHT)) {
+                animator.drawCurrentAnimation(crouchRight, buffer);
+            } else {
+                animator.drawCurrentAnimation(crouchLeft, buffer);
+            }
         }
         if (GameSettings.DEBUG_ENABLED) {
             drawHitBox(buffer);
