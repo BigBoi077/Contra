@@ -20,21 +20,17 @@ public class Player extends ControllableEntity {
     private BufferedImage spriteSheet;
     private Animator animator;
     private Direction lastDirection;
-    private Image[] gunningRight;
-    private Image[] runningRight;
-    private Image[] jumpingRight;
-    private Image[] gunningLeft;
-    private Image[] runningLeft;
-    private Image[] jumpingLeft;
-    private Image[] currentActiveSprites;
+    private Image[] gunningRightFrames;
+    private Image[] runningRightFrames;
+    private Image[] jumpingRightFrames;
+    private Image[] gunningLeftFrames;
+    private Image[] runningLeftFrames;
+    private Image[] jumpingLeftFrames;
     private BufferedImage crouchRight;
     private BufferedImage crouchLeft;
     private BufferedImage deathSprite;
-    private BufferedImage currentSprite;
     private int fireCooldown;
     private int numberLives;
-    private int nextFrame;
-    private int currentAnimationFrame;
 
     public Player(GamePad gamePad) {
         super(gamePad);
@@ -45,7 +41,6 @@ public class Player extends ControllableEntity {
         super.setSpeed(4);
         initClassContent();
         CollidableRepository.getInstance().registerEntity(this);
-        currentActiveSprites = gunningRight;
     }
 
     public Bullet fire() {
@@ -63,6 +58,14 @@ public class Player extends ControllableEntity {
         updateFireCooldown();
         updatePlayerSize();
         moveAccordingToHandler();
+        cycleFrames();
+        if (gamePad.isJumpPressed()) {
+            super.startJump();
+        }
+        lastDirection = getDirection();
+    }
+
+    private void cycleFrames() {
         if (hasMoved()) {
             if (isRunning()) {
                 animator.cycleRunningFrames();
@@ -72,33 +75,28 @@ public class Player extends ControllableEntity {
         } else {
             animator.cycleGunningFrames();
         }
-        if (gamePad.isJumpPressed()) {
-            super.startJump();
-        }
-        lastDirection = getDirection();
     }
 
     @Override
     public void draw(Buffer buffer) {
-
         if (isGunning() && isMoving(Direction.RIGHT)) {
-            buffer.drawImage(gunningRight[0], x, y);
+            buffer.drawImage(gunningRightFrames[animator.currentAnimationFrame], x, y);
         } else if (isGunning() && isMoving(Direction.LEFT)) {
-            buffer.drawImage(gunningLeft[0], x, y);
+            buffer.drawImage(gunningLeftFrames[animator.currentAnimationFrame], x, y);
         } else if (isJumping() && isMoving(Direction.RIGHT)) {
-            buffer.drawImage(jumpingRight[0], x, y);
+            buffer.drawImage(jumpingRightFrames[animator.currentAnimationFrame], x, y);
         } else if (isJumping() && isMoving(Direction.LEFT)) {
-            buffer.drawImage(jumpingLeft[0], x, y);
+            buffer.drawImage(jumpingLeftFrames[animator.currentAnimationFrame], x, y);
         } else if (isCrouching() && isMoving(Direction.RIGHT)) {
             buffer.drawImage(crouchRight, x, y);
         } else if (isCrouching() && isMoving(Direction.LEFT)) {
             buffer.drawImage(crouchLeft, x, y);
         } else if (isMoving(Direction.RIGHT)) {
-            buffer.drawImage(runningRight[0], x, y);
+            buffer.drawImage(runningRightFrames[animator.currentAnimationFrame], x, y);
         } else if (isMoving(Direction.LEFT)) {
-            buffer.drawImage(runningLeft[0], x, y);
+            buffer.drawImage(runningLeftFrames[animator.currentAnimationFrame], x, y);
         } else {
-            buffer.drawImage(runningRight[currentAnimationFrame], x, y);
+            buffer.drawImage(runningRightFrames[animator.currentAnimationFrame], x, y);
         }
         if (GameSettings.DEBUG_ENABLED) {
             drawHitBox(buffer);
@@ -128,12 +126,12 @@ public class Player extends ControllableEntity {
     }
 
     private void initSprites() {
-        gunningRight = new Image[2];
-        runningRight = new Image[5];
-        jumpingRight = new Image[4];
-        gunningLeft = new Image[2];
-        runningLeft = new Image[5];
-        jumpingLeft = new Image[4];
+        gunningRightFrames = new Image[2];
+        runningRightFrames = new Image[5];
+        jumpingRightFrames = new Image[4];
+        gunningLeftFrames = new Image[2];
+        runningLeftFrames = new Image[5];
+        jumpingLeftFrames = new Image[4];
         crouchRight = new BufferedImage(17, 34, TYPE_INT_RGB);
         crouchLeft = new BufferedImage(17, 34, TYPE_INT_RGB);
         deathSprite = new BufferedImage(11, 34, TYPE_INT_RGB);
@@ -141,13 +139,13 @@ public class Player extends ControllableEntity {
     }
 
     private void readSprites() {
-        spriteReader.readRightSpriteSheet(gunningRight, PlayerSpritesheetInfo.GUNNING_RIGHT_FRAMES_START_X, PlayerSpritesheetInfo.GUNNING_RIGHT_FRAMES_START_Y, PlayerSpritesheetInfo.GUNNING_WIDTH, PlayerSpritesheetInfo.GUNNING_HEIGHT, gunningRight.length);
-        spriteReader.readRightSpriteSheet(runningRight, PlayerSpritesheetInfo.RUNNING_RIGHT_FRAMES_START_X, PlayerSpritesheetInfo.RUNNING_RIGHT_FRAMES_START_Y, PlayerSpritesheetInfo.RUNNING_WIDTH, PlayerSpritesheetInfo.RUNNING_HEIGHT, runningRight.length);
-        spriteReader.readRightSpriteSheet(jumpingRight, PlayerSpritesheetInfo.RIGHT_JUMPING_FRAMES_START_X, PlayerSpritesheetInfo.RIGHT_JUMPING_FRAMES_START_Y, PlayerSpritesheetInfo.JUMPING_WIDTH, PlayerSpritesheetInfo.JUMPING_HEIGHT, jumpingRight.length);
+        spriteReader.readRightSpriteSheet(gunningRightFrames, PlayerSpritesheetInfo.GUNNING_RIGHT_FRAMES_START_X, PlayerSpritesheetInfo.GUNNING_RIGHT_FRAMES_START_Y, PlayerSpritesheetInfo.GUNNING_WIDTH, PlayerSpritesheetInfo.GUNNING_HEIGHT, gunningRightFrames.length);
+        spriteReader.readRightSpriteSheet(runningRightFrames, PlayerSpritesheetInfo.RUNNING_RIGHT_FRAMES_START_X, PlayerSpritesheetInfo.RUNNING_RIGHT_FRAMES_START_Y, PlayerSpritesheetInfo.RUNNING_WIDTH, PlayerSpritesheetInfo.RUNNING_HEIGHT, runningRightFrames.length);
+        spriteReader.readRightSpriteSheet(jumpingRightFrames, PlayerSpritesheetInfo.RIGHT_JUMPING_FRAMES_START_X, PlayerSpritesheetInfo.RIGHT_JUMPING_FRAMES_START_Y, PlayerSpritesheetInfo.JUMPING_WIDTH, PlayerSpritesheetInfo.JUMPING_HEIGHT, jumpingRightFrames.length);
 
-        spriteReader.readLeftSpriteSheet(gunningLeft, PlayerSpritesheetInfo.GUNNING_LEFT_FRAMES_START_X, PlayerSpritesheetInfo.GUNNING_LEFT_FRAMES_START_Y, PlayerSpritesheetInfo.GUNNING_WIDTH, PlayerSpritesheetInfo.GUNNING_HEIGHT, gunningRight.length);
-        spriteReader.readLeftSpriteSheet(runningLeft, PlayerSpritesheetInfo.RUNNING_LEFT_FRAMES_START_X, PlayerSpritesheetInfo.RUNNING_LEFT_FRAMES_START_Y, PlayerSpritesheetInfo.RUNNING_WIDTH, PlayerSpritesheetInfo.RUNNING_HEIGHT, runningRight.length);
-        spriteReader.readLeftSpriteSheet(jumpingLeft, PlayerSpritesheetInfo.LEFT_JUMPING_FRAMES_START_X, PlayerSpritesheetInfo.LEFT_JUMPING_FRAMES_START_Y, PlayerSpritesheetInfo.JUMPING_WIDTH, PlayerSpritesheetInfo.JUMPING_HEIGHT, jumpingRight.length);
+        spriteReader.readLeftSpriteSheet(gunningLeftFrames, PlayerSpritesheetInfo.GUNNING_LEFT_FRAMES_START_X, PlayerSpritesheetInfo.GUNNING_LEFT_FRAMES_START_Y, PlayerSpritesheetInfo.GUNNING_WIDTH, PlayerSpritesheetInfo.GUNNING_HEIGHT, gunningRightFrames.length);
+        spriteReader.readLeftSpriteSheet(runningLeftFrames, PlayerSpritesheetInfo.RUNNING_LEFT_FRAMES_START_X, PlayerSpritesheetInfo.RUNNING_LEFT_FRAMES_START_Y, PlayerSpritesheetInfo.RUNNING_WIDTH, PlayerSpritesheetInfo.RUNNING_HEIGHT, runningRightFrames.length);
+        spriteReader.readLeftSpriteSheet(jumpingLeftFrames, PlayerSpritesheetInfo.LEFT_JUMPING_FRAMES_START_X, PlayerSpritesheetInfo.LEFT_JUMPING_FRAMES_START_Y, PlayerSpritesheetInfo.JUMPING_WIDTH, PlayerSpritesheetInfo.JUMPING_HEIGHT, jumpingRightFrames.length);
 
         crouchRight = spriteReader.readSingleFrame(PlayerSpritesheetInfo.RIGHT_CROUCH_FRAME_START_X, PlayerSpritesheetInfo.RIGHT_CROUCH_FRAME_START_Y, PlayerSpritesheetInfo.CROUCH_WIDTH, PlayerSpritesheetInfo.CROUCH_HEIGHT);
         crouchLeft = spriteReader.readSingleFrame(PlayerSpritesheetInfo.LEFT_CROUCH_FRAME_START_X, PlayerSpritesheetInfo.LEFT_CROUCH_FRAME_START_Y, PlayerSpritesheetInfo.CROUCH_WIDTH, PlayerSpritesheetInfo.CROUCH_HEIGHT);
@@ -159,14 +157,6 @@ public class Player extends ControllableEntity {
         fireCooldown--;
         if (fireCooldown <=0) {
             fireCooldown = 0;
-        }
-    }
-
-    private void updateCurrentSprite() {
-        if (isCrouching() && getDirection() == Direction.RIGHT) {
-            currentSprite = crouchRight;
-        } else if (isCrouching() && getDirection() == Direction.RIGHT) {
-            currentSprite = crouchLeft;
         }
     }
 
