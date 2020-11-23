@@ -8,7 +8,7 @@ public class PlayerSpritesheetInfo {
     public static final int GUNNING_LEFT_FRAMES_START_X = 333;
     public static final int GUNNING_LEFT_FRAMES_START_Y = 54;
 
-    public static final int RUNNING_WIDTH = 75;
+    public static final int RUNNING_WIDTH = 74;
     public static final int RUNNING_HEIGHT = 108;
     public static final int RUNNING_RIGHT_FRAMES_START_X = 420;
     public static final int RUNNING_RIGHT_FRAMES_START_Y = 402;

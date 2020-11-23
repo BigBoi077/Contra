@@ -14,13 +14,13 @@ public class Bullet extends MovableEntity {
     public Bullet(Player player) {
         super.setSpeed(6);
         super.isDefinedAllowedSpeed = true;
-        super.setDimensions(4, 4);
         super.isGravityApplied = false;
+        super.setDimensions(4, 4);
         playerDirection = player.getDirection();
         if (playerDirection == Direction.RIGHT) {
-            super.teleport(player.getX() + player.getWidth() + 1, player.getY() + 15 - 2);
+            super.teleport(player.getX() + player.getWidth() + 1, player.getY() + player.getWidth() / 2 - 9);
         } else if (playerDirection == Direction.LEFT) {
-            super.teleport(player.getX() - 9, player.getY() + 15 - 2);
+            super.teleport(player.getX() - 9, player.getY() + player.getWidth() / 2 - 9);
         } else if (player.isCrouching()) {
             super.teleport(player.getX() - 9, player.getY() + 15 - 2);
         }
