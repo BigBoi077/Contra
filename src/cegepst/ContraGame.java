@@ -10,20 +10,15 @@ public class ContraGame extends Game {
 
     private Player player;
     private GamePad gamePad;
-    private ArrayList<Brick> bricks;
     private ArrayList<Bullet> bullets;
+    private World level;
 
     public ContraGame() {
         gamePad = new GamePad();
         player = new Player(gamePad);
-        player.teleport(245, 10);
-        bricks = new ArrayList<>();
+        level = new World();
         bullets = new ArrayList<>();
-        bricks.add(new Brick(250, 250));
-        bricks.add(new Brick(400, 250));
-        bricks.add(new Brick(350, 450));
-        bricks.add(new Brick(200, 400));
-        bricks.add(new Brick(100, 350));
+        player.teleport(245, 10);
     }
 
     @Override
@@ -52,9 +47,7 @@ public class ContraGame extends Game {
 
     @Override
     public void draw(Buffer buffer) {
-        for (StaticEntity entity : bricks) {
-            entity.draw(buffer);
-        }
+        level.draw(buffer);
         for (StaticEntity entity : bullets) {
             entity.draw(buffer);
         }

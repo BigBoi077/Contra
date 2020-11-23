@@ -13,7 +13,6 @@ import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 public class Player extends ControllableEntity {
 
     private static final String SPRITE_PATH = "images/PlayerSprites.png";
-    private static final int ANIMATION_SPEED = 8;
     private GamePad gamePad;
     private HUD hud;
     private SpriteReader spriteReader;
@@ -38,7 +37,7 @@ public class Player extends ControllableEntity {
         this.gamePad = gamePad;
         this.numberLives = GameSettings.NUMBER_PLAYER_LIVES;
         super.setDimension(30, 30);
-        super.setSpeed(4);
+        super.setSpeed(1);
         initClassContent();
         CollidableRepository.getInstance().registerEntity(this);
     }
@@ -52,29 +51,25 @@ public class Player extends ControllableEntity {
         return fireCooldown == 0;
     }
 
+    public boolean isCrouching() {
+        return gamePad.isCrouchPressed() && super.falling == false;
+    }
+
+    public int getNumberLives() {
+        return numberLives;
+    }
+
     @Override
     public void update() {
         super.update();
         updateFireCooldown();
-        updatePlayerSize();
+        // updatePlayerSize();
         moveAccordingToHandler();
         cycleFrames();
         if (gamePad.isJumpPressed()) {
             super.startJump();
         }
         lastDirection = getDirection();
-    }
-
-    private void cycleFrames() {
-        if (hasMoved()) {
-            if (isRunning()) {
-                animator.cycleRunningFrames();
-            } else if (isJumping()) {
-                animator.cycleJumpingFrames();
-            }
-        } else {
-            animator.cycleGunningFrames();
-        }
     }
 
     @Override
@@ -117,6 +112,18 @@ public class Player extends ControllableEntity {
             drawHitBox(buffer);
         }
         hud.draw(this, buffer);
+    }
+
+    private void cycleFrames() {
+        if (hasMoved()) {
+            if (isRunning()) {
+                animator.cycleRunningFrames();
+            } else if (isJumping()) {
+                animator.cycleJumpingFrames();
+            }
+        } else {
+            animator.cycleGunningFrames();
+        }
     }
 
     private boolean isMoving(Direction direction) {
@@ -188,10 +195,6 @@ public class Player extends ControllableEntity {
        }
     }
 
-    public boolean isCrouching() {
-        return gamePad.isCrouchPressed() && super.falling == false;
-    }
-
     private boolean isRunning() {
         return getDirection() == Direction.LEFT || getDirection() == Direction.RIGHT;
     }
@@ -202,9 +205,5 @@ public class Player extends ControllableEntity {
 
     private boolean isJumping() {
         return gamePad.isJumpPressed();
-    }
-
-    public int getNumberLives() {
-        return numberLives;
     }
 }
