@@ -12,7 +12,7 @@ import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 public class Player extends ControllableEntity {
 
-    private static final String SPRITE_PATH = "images/PlayerSprites.png";
+    private static final String SPRITE_PATH = "images/PlayerSpritesResized.png";
     private GamePad gamePad;
     private HUD hud;
     private SpriteReader spriteReader;
@@ -36,7 +36,7 @@ public class Player extends ControllableEntity {
         super.isGravityApplied = true;
         this.gamePad = gamePad;
         this.numberLives = GameSettings.NUMBER_PLAYER_LIVES;
-        super.setDimension(30, 30);
+        super.setDimension(87, 102);
         super.setSpeed(1);
         initClassContent();
         CollidableRepository.getInstance().registerEntity(this);
