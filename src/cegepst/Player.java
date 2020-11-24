@@ -64,12 +64,14 @@ public class Player extends ControllableEntity {
     @Override
     public void update() {
         super.update();
+        Debuger.consoleLog(x);
+        Debuger.consoleLog(y);
         if (gamePad.isJumpPressed()) {
             super.startJump();
         }
         updateFireCooldown();
         moveAccordingToHandler();
-        // updatePlayerSize();
+        updatePlayerSize();
         cycleFrames();
         lastDirection = getDirection();
     }

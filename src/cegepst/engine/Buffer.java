@@ -10,6 +10,10 @@ public class Buffer {
         this.graphics = graphics;
     }
 
+    public void translate(int x) {
+        graphics.translate(x, 0);
+    }
+
     public void drawRectangle(int x, int y, int width, int height, Paint paint) {
         graphics.setPaint(paint);
         graphics.fillRect(x, y, width, height);
