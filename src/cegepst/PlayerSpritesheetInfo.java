@@ -1,7 +1,7 @@
 package cegepst;
 
 public class PlayerSpritesheetInfo {
-    public static final int GUNNING_WIDTH = 87;
+    public static final int GUNNING_WIDTH = 85;
     public static final int GUNNING_HEIGHT = 102;
     public static final int GUNNING_RIGHT_FRAMES_START_X = 435;
     public static final int GUNNING_RIGHT_FRAMES_START_Y = 54;
@@ -15,7 +15,7 @@ public class PlayerSpritesheetInfo {
     public static final int RUNNING_LEFT_FRAMES_START_X = 345;
     public static final int RUNNING_LEFT_FRAMES_START_Y = 402;
 
-    public static final int JUMPING_WIDTH = 63;
+    public static final int JUMPING_WIDTH = 62;
     public static final int JUMPING_HEIGHT = 60;
     public static final int RIGHT_JUMPING_FRAMES_START_X = 549;
     public static final int RIGHT_JUMPING_FRAMES_START_Y = 513;

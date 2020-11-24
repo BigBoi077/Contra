@@ -34,11 +34,11 @@ public class Player extends ControllableEntity {
     public Player(GamePad gamePad) {
         super(gamePad);
         super.isGravityApplied = true;
+        super.isDefinedAllowedSpeed = false;
         this.gamePad = gamePad;
         this.numberLives = GameSettings.NUMBER_PLAYER_LIVES;
         super.setDimension(87, 102);
-        super.setSpeed(2);
-        super.falling = true;
+        super.setSpeed(5);
         initClassContent();
         CollidableRepository.getInstance().registerEntity(this);
         lastDirection = Direction.RIGHT;
@@ -64,20 +64,29 @@ public class Player extends ControllableEntity {
     @Override
     public void update() {
         super.update();
-        updateFireCooldown();
-        updatePlayerSize();
-        moveAccordingToHandler();
-        cycleFrames();
         if (gamePad.isJumpPressed()) {
             super.startJump();
         }
+        updateFireCooldown();
+        moveAccordingToHandler();
+        // updatePlayerSize();
+        cycleFrames();
         lastDirection = getDirection();
     }
 
     @Override
     public void draw(Buffer buffer) {
         if (hasMoved()) {
-            if (isCrouching()) {
+            if (isJumping()) {
+                if (animator.currentAnimationFrame > jumpingRightFrames.length - 1) {
+                    animator.currentAnimationFrame = 0;
+                }
+                if (isMoving(Direction.RIGHT)) {
+                    animator.drawCurrentAnimation(jumpingRightFrames, buffer);
+                } else {
+                    animator.drawCurrentAnimation(jumpingLeftFrames, buffer);
+                }
+            } else if (isCrouching()) {
                 if (isMoving(Direction.RIGHT)) {
                     animator.drawCurrentAnimation(crouchRightFrame, buffer);
                 } else {
@@ -100,15 +109,6 @@ public class Player extends ControllableEntity {
                     animator.drawCurrentAnimation(runningRightFrames, buffer);
                 } else {
                     animator.drawCurrentAnimation(runningLeftFrames, buffer);
-                }
-            } else if (isJumping()) {
-                if (animator.currentAnimationFrame > jumpingRightFrames.length - 1) {
-                    animator.currentAnimationFrame = 0;
-                }
-                if (isMoving(Direction.RIGHT)) {
-                    animator.drawCurrentAnimation(jumpingRightFrames, buffer);
-                } else {
-                    animator.drawCurrentAnimation(jumpingLeftFrames, buffer);
                 }
             }
         } else {

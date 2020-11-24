@@ -26,7 +26,7 @@ public class World {
 
     private void createBorders() {
         addBlockade(5, 645, 0, 0);
-        addBlockade(6720, 5, 0, 435);
+        addBlockade(6720, 200, 0, 435);
         addBlockade(5, 645, 6700, 0);
     }
 
@@ -40,5 +40,9 @@ public class World {
     private void loadBackground() {
         ImagesReader imagesReader = new ImagesReader();
         background = imagesReader.readImage(LEVEL_PATH);
+    }
+
+    public ArrayList<Blockade> getWorldBorders() {
+        return worldBorders;
     }
 }

@@ -1,6 +1,5 @@
 package cegepst.engine.entity;
 
-import cegepst.GameSettings;
 import cegepst.engine.CollidableRepository;
 import cegepst.engine.controls.Direction;
 

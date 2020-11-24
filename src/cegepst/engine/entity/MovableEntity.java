@@ -11,13 +11,13 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     private final Collision collision;
     private Direction direction = Direction.UP;
-    protected int speed;
+    protected int speed = 1;
     private boolean moved;
     private int lastX;
     private int lastY;
-    private int jumpMaxHeight = 25; // jumping max
+    private int jumpMaxHeight = 24; // jumping max
     private int currentJumpMeter = 0;
-    protected double gravity = 4; // falling speed;
+    protected double gravity = 1; // falling speed;
     private double jumpSpeed = 4;
     protected int definedAllowedSpeed;
     protected boolean jumping = false;
@@ -31,7 +31,6 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     @Override
     public void update() { // done first before any other action
-
         if (GameSettings.GRAVITY_ENABLED && isGravityApplied) {
             // Are we jumping?
             if (jumping) {

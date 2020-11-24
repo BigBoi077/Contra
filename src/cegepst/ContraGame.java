@@ -10,15 +10,15 @@ public class ContraGame extends Game {
 
     private Player player;
     private GamePad gamePad;
-    private ArrayList<Bullet> bullets;
     private World level;
+    private ArrayList<Bullet> bullets;
 
     public ContraGame() {
         gamePad = new GamePad();
         player = new Player(gamePad);
         level = new World();
         bullets = new ArrayList<>();
-        player.teleport(245, 10);
+        player.teleport(100, 0);
     }
 
     @Override
