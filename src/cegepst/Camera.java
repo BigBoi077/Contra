@@ -1,29 +1,26 @@
 package cegepst;
 
 import cegepst.engine.Buffer;
+import cegepst.engine.entity.ControllableEntity;
 import cegepst.engine.entity.UpdatableEntity;
 
 public class Camera extends UpdatableEntity {
 
-    private Player player;
+    private final ControllableEntity entity;
     private int xOffset;
 
-    public Camera(Player player, int xOffset) {
-        this.player = player;
+    public Camera(ControllableEntity entity, int xOffset) {
+        this.entity = entity;
         this.xOffset = xOffset;
     }
 
     @Override
     public void update() {
-        xOffset = -player.getX();
+        xOffset = -entity.getX();
     }
 
     public int getxOffset() {
         return xOffset;
-    }
-
-    public void setxOffset(int xOffset) {
-        this.xOffset = xOffset;
     }
 
     @Override

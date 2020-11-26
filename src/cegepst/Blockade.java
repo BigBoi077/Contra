@@ -1,17 +1,11 @@
 package cegepst;
 
 import cegepst.engine.Buffer;
-import cegepst.engine.CollidableRepository;
 import cegepst.engine.entity.StaticEntity;
 
 import java.awt.*;
 
 public class Blockade extends StaticEntity {
-
-    public Blockade() {
-        CollidableRepository.getInstance().registerEntity(this);
-    }
-
 
     @Override
     public void draw(Buffer buffer) {

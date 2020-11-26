@@ -13,7 +13,7 @@ import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 public class Player extends ControllableEntity {
 
     private static final String SPRITE_PATH = "images/PlayerSpritesResized.png";
-    private GamePad gamePad;
+    private final GamePad gamePad;
     private HUD hud;
     private SpriteReader spriteReader;
     private BufferedImage spriteSheet;
@@ -29,7 +29,7 @@ public class Player extends ControllableEntity {
     private BufferedImage crouchLeftFrame;
     private BufferedImage deathFrame;
     private int fireCooldown;
-    private int numberLives;
+    private final int numberLives;
 
     public Player(GamePad gamePad) {
         super(gamePad);
@@ -38,10 +38,9 @@ public class Player extends ControllableEntity {
         this.gamePad = gamePad;
         this.numberLives = GameSettings.NUMBER_PLAYER_LIVES;
         super.setDimension(87, 102);
-        super.setSpeed(5);
+        super.setSpeed(4);
         initClassContent();
         CollidableRepository.getInstance().registerEntity(this);
-        lastDirection = Direction.RIGHT;
     }
 
     public Bullet fire() {
@@ -64,29 +63,26 @@ public class Player extends ControllableEntity {
     @Override
     public void update() {
         super.update();
-        Debuger.consoleLog(x);
-        Debuger.consoleLog(y);
         if (gamePad.isJumpPressed()) {
             super.startJump();
         }
         updateFireCooldown();
         moveAccordingToHandler();
-        updatePlayerSize();
+        // updatePlayerSize();
         cycleFrames();
         lastDirection = getDirection();
     }
 
-    @Override
-    public void draw(Buffer buffer) {
+    public void draw(Buffer buffer, int xOffset) {
         if (hasMoved()) {
-            if (isJumping()) {
+            if (isInTheAir()) {
                 if (animator.currentAnimationFrame > jumpingRightFrames.length - 1) {
                     animator.currentAnimationFrame = 0;
                 }
                 if (isMoving(Direction.RIGHT)) {
-                    animator.drawCurrentAnimation(jumpingRightFrames, buffer);
+                    animator.drawCurrentAnimation(jumpingRightFrames, buffer, xOffset);
                 } else {
-                    animator.drawCurrentAnimation(jumpingLeftFrames, buffer);
+                    animator.drawCurrentAnimation(jumpingLeftFrames, buffer, xOffset);
                 }
             } else if (isCrouching()) {
                 if (isMoving(Direction.RIGHT)) {
@@ -99,18 +95,18 @@ public class Player extends ControllableEntity {
                     animator.currentAnimationFrame = 0;
                 }
                 if (isMoving(Direction.RIGHT)) {
-                    animator.drawCurrentAnimation(gunningRightFrames, buffer);
+                    animator.drawCurrentAnimation(gunningRightFrames, buffer, xOffset);
                 } else {
-                    animator.drawCurrentAnimation(gunningLeftFrames, buffer);
+                    animator.drawCurrentAnimation(gunningLeftFrames, buffer, xOffset);
                 }
             } else if (isRunning()) {
                 if (animator.currentAnimationFrame > runningRightFrames.length - 1) {
                     animator.currentAnimationFrame = 0;
                 }
                 if (isMoving(Direction.RIGHT)) {
-                    animator.drawCurrentAnimation(runningRightFrames, buffer);
+                    animator.drawCurrentAnimation(runningRightFrames, buffer, xOffset);
                 } else {
-                    animator.drawCurrentAnimation(runningLeftFrames, buffer);
+                    animator.drawCurrentAnimation(runningLeftFrames, buffer, xOffset);
                 }
             }
         } else {
@@ -118,22 +114,24 @@ public class Player extends ControllableEntity {
                 animator.currentAnimationFrame = 0;
             }
             if (lastDirection == Direction.RIGHT) {
-                animator.drawCurrentAnimation(gunningRightFrames, buffer);
+                animator.drawCurrentAnimation(gunningRightFrames, buffer, xOffset);
             } else {
-                animator.drawCurrentAnimation(gunningLeftFrames, buffer);
+                animator.drawCurrentAnimation(gunningLeftFrames, buffer, xOffset);
             }
         }
-        if (GameSettings.DEBUG_ENABLED) {
-            drawHitBox(buffer);
-        }
         hud.draw(this, buffer);
+    }
+
+    public void resetPosition() {
+        x = lastX;
+        y = lastY;
     }
 
     private void cycleFrames() {
         if (hasMoved()) {
             if (isRunning()) {
                 animator.cycleRunningFrames();
-            } else if (isJumping()) {
+            } else if (isInTheAir()) {
                 animator.cycleJumpingFrames();
             }
         } else {
@@ -195,16 +193,16 @@ public class Player extends ControllableEntity {
     }
 
     private void updatePlayerSize() {
-       if (isGunning()) {
+        if (isGunning()) {
             height = PlayerSpritesheetInfo.GUNNING_HEIGHT;
             width = PlayerSpritesheetInfo.GUNNING_WIDTH;
-       } else if (isJumping()) {
-           height = PlayerSpritesheetInfo.JUMPING_HEIGHT;
-           width = PlayerSpritesheetInfo.JUMPING_WIDTH;
-       } else if (isCrouching()) {
-           height = PlayerSpritesheetInfo.CROUCH_HEIGHT;
-           width = PlayerSpritesheetInfo.CROUCH_WIDTH;
-       }
+        } else if (isInTheAir()) {
+            height = PlayerSpritesheetInfo.JUMPING_HEIGHT;
+            width = PlayerSpritesheetInfo.JUMPING_WIDTH;
+        } else if (isCrouching()) {
+            height = PlayerSpritesheetInfo.CROUCH_HEIGHT;
+            width = PlayerSpritesheetInfo.CROUCH_WIDTH;
+        }
     }
 
     private boolean isRunning() {
@@ -215,7 +213,18 @@ public class Player extends ControllableEntity {
         return gamePad.isFirePressed();
     }
 
-    private boolean isJumping() {
-        return gamePad.isJumpPressed();
+    private boolean isInTheAir() {
+        return super.falling || super.jumping;
+    }
+
+    public boolean isCentered(LeftBorder leftBorder) {
+        return x - leftBorder.getX() > 400;
+    }
+
+    @Override
+    public void draw(Buffer buffer) {
+        if (GameSettings.DEBUG_ENABLED) {
+            drawHitBox(buffer);
+        }
     }
 }

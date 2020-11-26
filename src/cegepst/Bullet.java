@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class Bullet extends MovableEntity {
 
-    private Direction playerDirection;
+    private final Direction playerDirection;
 
     public Bullet(Player player) {
         super.setSpeed(6);
@@ -21,8 +21,8 @@ public class Bullet extends MovableEntity {
             super.teleport(player.getX() + player.getWidth() + 1,  player.getY() + player.getWidth() / 2 - 9);
         } else if (playerDirection == Direction.LEFT) {
             super.teleport(player.getX() - 9, player.getY() + player.getWidth() / 2 - 9);
-        } else if (player.isCrouching()) {
-            super.teleport(player.getX() - 9, player.getY() + 15 - 2);
+        } else if (player.isCrouching() && playerDirection == Direction.RIGHT) {
+            super.teleport(player.getX() + player.getWidth() + 1, player.getY() + player.getWidth() / 2 - 9);
         }
         CollidableRepository.getInstance().registerEntity(this);
     }
@@ -31,7 +31,6 @@ public class Bullet extends MovableEntity {
     public void update() {
         super.update();
         super.move(playerDirection);
-        super.definedAllowedSpeed = 10;
         if (x >= 820 || x < 0) {
             CollidableRepository.getInstance().unregisterEntity(this);
         }

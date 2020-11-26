@@ -1,6 +1,5 @@
 package cegepst.engine.entity;
 
-import cegepst.Debuger;
 import cegepst.GameSettings;
 import cegepst.engine.Buffer;
 import cegepst.engine.controls.Direction;
@@ -12,10 +11,10 @@ public abstract class MovableEntity extends UpdatableEntity {
     private final Collision collision;
     private Direction direction = Direction.UP;
     protected int speed = 1;
+    private final int jumpMaxHeight = 24; // jumping max
+    protected int lastX;
     private boolean moved;
-    private int lastX;
-    private int lastY;
-    private int jumpMaxHeight = 24; // jumping max
+    protected int lastY;
     private int currentJumpMeter = 0;
     protected double gravity = 1; // falling speed;
     private double jumpSpeed = 4;
