@@ -20,7 +20,7 @@ public class Bullet extends MovableEntity {
         if (player.isCrouching() && playerDirection == Direction.RIGHT) {
             super.teleport(player.getX() + player.getWidth() + 1, player.getY() + player.getWidth() / 2 + 25);
         } else if (player.isCrouching() && playerDirection == Direction.LEFT) {
-            super.teleport(player.getX() - 9, player.getY() + player.getWidth() / 2 - 9);
+            super.teleport(player.getX() - 9, player.getY() + player.getWidth() / 2 - 25);
         } else if (playerDirection == Direction.RIGHT) {
             super.teleport(player.getX() + player.getWidth() + 1, player.getY() + player.getWidth() / 2 - 9);
         } else if (playerDirection == Direction.LEFT) {
