@@ -4,7 +4,7 @@ import cegepst.engine.controls.MovementController;
 
 public abstract class ControllableEntity extends MovableEntity {
 
-    private MovementController controller;
+    private final MovementController controller;
 
     public ControllableEntity(MovementController controller) {
         this.controller = controller;
@@ -17,6 +17,9 @@ public abstract class ControllableEntity extends MovableEntity {
     }
 
     public void moveAccordingToHandler() {
+        if (controller.isCrouchPressed()) {
+            return;
+        }
         if (!controller.isMoving()) {
             return;
         }

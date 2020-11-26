@@ -8,9 +8,10 @@ public class MovementController extends Controller {
     private int downKey = KeyEvent.VK_S;
     private int rightKey = KeyEvent.VK_D;
     private int leftKey = KeyEvent.VK_A;
+    private final int crouchKey = KeyEvent.VK_SHIFT;
 
     public MovementController() {
-        int[] pressedKeys = {upKey, downKey, rightKey, leftKey};
+        int[] pressedKeys = {upKey, downKey, rightKey, leftKey, crouchKey};
         bindKeys(pressedKeys);
     }
 
@@ -28,6 +29,10 @@ public class MovementController extends Controller {
 
     public boolean isDownPressed() {
         return super.isKeyPressed(downKey);
+    }
+
+    public boolean isCrouchPressed() {
+        return super.isKeyPressed(crouchKey);
     }
 
     public boolean isMoving() {

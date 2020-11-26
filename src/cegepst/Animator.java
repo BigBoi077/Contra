@@ -62,8 +62,8 @@ public class Animator {
         }
     }
 
-    public void drawCurrentAnimation(BufferedImage currentSprite, Buffer buffer) {
-        buffer.drawImage(currentSprite, entity.getX(), entity.getY());
+    public void drawCurrentAnimation(BufferedImage currentSprite, Buffer buffer, int xOffset) {
+        buffer.drawImage(currentSprite, entity.getX() + xOffset, entity.getY() + 50);
     }
 
     public void drawCurrentAnimation(Image[] images, Buffer buffer, int xOffset) {
