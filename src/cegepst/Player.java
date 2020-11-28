@@ -60,6 +60,14 @@ public class Player extends ControllableEntity {
         return numberLives;
     }
 
+    public boolean isCentered(LeftBorder leftBorder) {
+        return !(x - leftBorder.getX() > 400);
+    }
+
+    public boolean isJumping() {
+        return super.jumping;
+    }
+
     @Override
     public void update() {
         super.update();
@@ -106,7 +114,7 @@ public class Player extends ControllableEntity {
                 }
             }
         } else {
-            if (isMoving(Direction.RIGHT)) {
+            if (isMoving(Direction.RIGHT) || lastDirection == Direction.DOWN) {
                 animator.drawCurrentAnimation(gunningRightFrames, buffer, xOffset);
             } else {
                 animator.drawCurrentAnimation(gunningLeftFrames, buffer, xOffset);
@@ -202,10 +210,6 @@ public class Player extends ControllableEntity {
 
     private boolean isInTheAir() {
         return super.falling || super.jumping || super.currentJumpMeter > super.jumpMaxHeight;
-    }
-
-    public boolean isCentered(LeftBorder leftBorder) {
-        return !(x - leftBorder.getX() > 400);
     }
 
     @Override

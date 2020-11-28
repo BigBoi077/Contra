@@ -41,6 +41,13 @@ public class Bullet extends MovableEntity {
 
     @Override
     public void draw(Buffer buffer) {
-        buffer.drawRectangle(x, y, width, height, new Color(230, 230, 230));
+        buffer.drawRectangle(x + 2, y, 2, 2, new Color(224, 224, 209));
+        buffer.drawRectangle(x, y - 2, 2, 2, new Color(224, 224, 209));
+
+        buffer.drawRectangle(x, y, 2, 2, new Color(224, 224, 209));
+
+        buffer.drawRectangle(x - 2, y, 2, 2, new Color(224, 224, 209));
+        buffer.drawRectangle(x, y + 2, 2, 2, new Color(224, 224, 209));
     }
+
 }

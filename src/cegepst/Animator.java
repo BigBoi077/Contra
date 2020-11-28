@@ -13,7 +13,7 @@ public class Animator {
     private int nextFrame = ANIMATION_SPEED;
     protected int currentAnimationFrame;
 
-    public Animator(Player entity) {
+    public Animator(MovableEntity entity) {
         this.entity = entity;
     }
 
