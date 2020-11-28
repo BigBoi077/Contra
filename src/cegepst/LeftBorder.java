@@ -10,18 +10,18 @@ public class LeftBorder extends UpdatableEntity {
 
     private final Player player;
 
-    public LeftBorder(Player player, int height, int width, int x) {
+    public LeftBorder(Player player) {
         this.player = player;
-        super.height = height;
-        super.width = width;
-        super.x = x;
+        super.x = 0;
+        super.setDimension(50, 600);
         CollidableRepository.getInstance().registerEntity(this);
     }
 
     @Override
     public void update() {
-        if (player.isCentered(this)) {
-            moveBorder();
+        if (!player.isCentered(this)) {
+            centerBorder();
+            Debuger.consoleLog(player.isCentered(this));
         }
     }
 
@@ -32,7 +32,9 @@ public class LeftBorder extends UpdatableEntity {
         }
     }
 
-    private void moveBorder() {
-        super.x += 5;
+    private void centerBorder() {
+        for (; player.getX() - this.x > 400; ) {
+            super.x++;
+        }
     }
 }

@@ -78,7 +78,6 @@ public class Player extends ControllableEntity {
     public void draw(Buffer buffer, int xOffset) {
         hud.draw(this, buffer);
         if (isCrouching()) {
-            Debuger.consoleLog("crouching");
             if (isMoving(Direction.RIGHT)) {
                 animator.drawCurrentAnimation(crouchRightFrame, buffer, xOffset);
             } else {
@@ -88,30 +87,18 @@ public class Player extends ControllableEntity {
         }
         if (hasMoved()) {
             if (isInTheAir()) {
-                Debuger.consoleLog("in the air");
-                if (animator.currentAnimationFrame > jumpingRightFrames.length - 1) {
-                    animator.currentAnimationFrame = 0;
-                }
                 if (isMoving(Direction.RIGHT)) {
                     animator.drawCurrentAnimation(jumpingRightFrames, buffer, xOffset);
                 } else {
                     animator.drawCurrentAnimation(jumpingLeftFrames, buffer, xOffset);
                 }
             } else if (isGunning()) {
-                Debuger.consoleLog("gunning");
-                if (animator.currentAnimationFrame > gunningRightFrames.length - 1) {
-                    animator.currentAnimationFrame = 0;
-                }
                 if (isMoving(Direction.RIGHT)) {
                     animator.drawCurrentAnimation(gunningRightFrames, buffer, xOffset);
                 } else {
                     animator.drawCurrentAnimation(gunningLeftFrames, buffer, xOffset);
                 }
             } else if (isRunning()) {
-                Debuger.consoleLog("running");
-                if (animator.currentAnimationFrame > runningRightFrames.length - 1) {
-                    animator.currentAnimationFrame = 0;
-                }
                 if (isMoving(Direction.RIGHT)) {
                     animator.drawCurrentAnimation(runningRightFrames, buffer, xOffset);
                 } else {
@@ -119,10 +106,7 @@ public class Player extends ControllableEntity {
                 }
             }
         } else {
-            if (animator.currentAnimationFrame > gunningRightFrames.length - 1) {
-                animator.currentAnimationFrame = 0;
-            }
-            if (lastDirection == Direction.RIGHT) {
+            if (isMoving(Direction.RIGHT)) {
                 animator.drawCurrentAnimation(gunningRightFrames, buffer, xOffset);
             } else {
                 animator.drawCurrentAnimation(gunningLeftFrames, buffer, xOffset);
@@ -133,12 +117,12 @@ public class Player extends ControllableEntity {
     private void cycleFrames() {
         if (hasMoved()) {
             if (isRunning()) {
-                animator.cycleRunningFrames();
+                animator.cycleFrames(runningRightFrames);
             } else if (isInTheAir()) {
-                animator.cycleJumpingFrames();
+                animator.cycleFrames(jumpingRightFrames);
             }
         } else {
-            animator.cycleGunningFrames();
+            animator.cycleFrames(gunningRightFrames);
         }
     }
 
@@ -221,7 +205,7 @@ public class Player extends ControllableEntity {
     }
 
     public boolean isCentered(LeftBorder leftBorder) {
-        return x - leftBorder.getX() > 400;
+        return !(x - leftBorder.getX() > 400);
     }
 
     @Override

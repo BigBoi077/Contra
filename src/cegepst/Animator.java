@@ -17,42 +17,12 @@ public class Animator {
         this.entity = entity;
     }
 
-    public void cycleRunningFrames() {
+    public void cycleFrames(Image[] frames) {
         if (this.entity.hasMoved()) {
             --nextFrame;
             if (nextFrame == 0) {
                 ++currentAnimationFrame;
-                if (currentAnimationFrame >= 5) {
-                    currentAnimationFrame = 0;
-                }
-                nextFrame = ANIMATION_SPEED;
-            }
-        } else {
-            currentAnimationFrame = 1;
-        }
-    }
-
-    public void cycleGunningFrames() {
-        if (this.entity.hasMoved()) {
-            --nextFrame;
-            if (nextFrame == 0) {
-                ++currentAnimationFrame;
-                if (currentAnimationFrame >= 2) {
-                    currentAnimationFrame = 0;
-                }
-                nextFrame = ANIMATION_SPEED;
-            }
-        } else {
-            currentAnimationFrame = 0;
-        }
-    }
-
-    public void cycleJumpingFrames() {
-        if (this.entity.hasMoved()) {
-            --nextFrame;
-            if (nextFrame == 0) {
-                ++currentAnimationFrame;
-                if (currentAnimationFrame >= 4) {
+                if (currentAnimationFrame >= frames.length) {
                     currentAnimationFrame = 0;
                 }
                 nextFrame = ANIMATION_SPEED;
@@ -66,7 +36,14 @@ public class Animator {
         buffer.drawImage(currentSprite, entity.getX() + xOffset, entity.getY() + 50);
     }
 
-    public void drawCurrentAnimation(Image[] images, Buffer buffer, int xOffset) {
-        buffer.drawImage(images[currentAnimationFrame], entity.getX() + xOffset, entity.getY());
+    public void drawCurrentAnimation(Image[] frames, Buffer buffer, int xOffset) {
+        checkFrameIndex(frames);
+        buffer.drawImage(frames[currentAnimationFrame], entity.getX() + xOffset, entity.getY());
+    }
+
+    private void checkFrameIndex(Image[] frames) {
+        if (currentAnimationFrame > frames.length - 1) {
+            currentAnimationFrame = 0;
+        }
     }
 }

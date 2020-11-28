@@ -1,6 +1,7 @@
 package cegepst;
 
 import cegepst.engine.Buffer;
+import cegepst.engine.GameTime;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,8 +11,8 @@ import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 public class HUD {
 
     private static final String SPRITE_PATH = "images/ItemsSymbol.png";
-    private SpriteReader spriteReader;
-    private BufferedImage spriteSheet;
+    private final SpriteReader spriteReader;
+    private final BufferedImage spriteSheet;
     private BufferedImage lifeSymbol;
 
     public HUD() {
@@ -25,5 +26,6 @@ public class HUD {
     public void draw(Player player, Buffer buffer) {
         buffer.drawImage(lifeSymbol, 20, 20);
         buffer.drawText(" X " + player.getNumberLives(), 45, 32, Color.white);
+        buffer.drawText(GameTime.getElapsedFormattedTime(), 750, 20, Color.white);
     }
 }

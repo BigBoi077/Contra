@@ -20,7 +20,7 @@ public class ContraGame extends Game {
         level = new World();
         player = new Player(gamePad);
         camera = new Camera(player, 0);
-        leftBorder = new LeftBorder(player, 600, 20, 0);
+        leftBorder = new LeftBorder(player);
         bullets = new ArrayList<>();
         player.teleport(100, 0);
     }
