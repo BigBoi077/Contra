@@ -24,4 +24,6 @@ abstract class Alien extends MovableEntity {
     public abstract void cycleFrames();
 
     public abstract boolean nearPlayer();
+
+    public abstract void spawn();
 }

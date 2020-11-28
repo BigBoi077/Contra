@@ -182,7 +182,7 @@ public class Player extends ControllableEntity {
 
     private void updateFireCooldown() {
         fireCooldown--;
-        if (fireCooldown <=0) {
+        if (fireCooldown <= 0) {
             fireCooldown = 0;
         }
     }

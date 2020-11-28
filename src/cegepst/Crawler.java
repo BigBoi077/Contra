@@ -1,6 +1,7 @@
 package cegepst;
 
 import cegepst.engine.Buffer;
+import cegepst.engine.CollidableRepository;
 import cegepst.engine.controls.Direction;
 
 import java.awt.*;
@@ -20,6 +21,7 @@ public class Crawler extends Alien {
         initSpritesheet();
         initFrames();
         readSprites();
+        CollidableRepository.getInstance().registerEntity(this);
     }
 
     @Override
@@ -68,5 +70,10 @@ public class Crawler extends Alien {
     @Override
     public boolean nearPlayer() {
         return x - player.getX() < 50;
+    }
+
+    @Override
+    public void spawn() {
+        teleport(player.getX() + 550, 0);
     }
 }
