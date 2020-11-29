@@ -21,7 +21,6 @@ public class LeftBorder extends UpdatableEntity {
     public void update() {
         if (!player.isCentered(this)) {
             centerBorder();
-            Debuger.consoleLog(player.isCentered(this));
         }
     }
 

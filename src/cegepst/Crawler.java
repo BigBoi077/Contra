@@ -10,7 +10,7 @@ public class Crawler extends Alien {
 
     public static final int CRAWLER_WIDTH = 33;
     public static final int CRAWLER_HEIGHT = 32;
-    private final String SPRITE_PATH = "images/AlienSprites.png";
+    private final String SPRITE_PATH = "images/AliensSprites.png";
     private final Player player;
 
     public Crawler(Player player) {
@@ -36,7 +36,11 @@ public class Crawler extends Alien {
 
     @Override
     public void draw(Buffer buffer) {
-
+        if (nearPlayer()) {
+            animator.drawCurrentAnimation(secondaryFrames, buffer, 0);
+        } else {
+            animator.drawCurrentAnimation(mainFrames, buffer, 0);
+        }
     }
 
     @Override

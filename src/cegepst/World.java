@@ -43,8 +43,4 @@ public class World {
         ImagesReader imagesReader = new ImagesReader();
         background = imagesReader.readImage(LEVEL_PATH);
     }
-
-    public ArrayList<Blockade> getWorldBorders() {
-        return worldBorders;
-    }
 }

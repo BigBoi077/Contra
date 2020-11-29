@@ -1,35 +1,45 @@
 package cegepst;
 
+import cegepst.engine.GameTime;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 public class AlienSpawner {
 
     private final Random random;
     private final Player player;
-    private int spawnerCooldown = 20;
+    private final ArrayList<Alien> aliens;
     private int coinToss;
+    private Crawler crawler;
 
     public AlienSpawner(Player player) {
         this.player = player;
         this.random = new Random();
+        aliens = new ArrayList<>();
     }
 
     public void update() {
         updateSpawnCooldown();
-        spawnAlien();
     }
 
     private void spawnAlien() {
-        coinToss = random.nextInt(2);
-        if (coinToss == 1) {
-            new Crawler(player).spawn();
-        }
+        crawler = new Crawler(player);
+        aliens.add(crawler);
+        crawler.spawn();
     }
 
     private void updateSpawnCooldown() {
-        spawnerCooldown--;
-        if (spawnerCooldown <= 0) {
-            spawnerCooldown = 0;
+        if (canSpawn()) {
+            spawnAlien();
         }
+    }
+
+    private boolean canSpawn() {
+        return GameTime.getElapsedTime() % 50 == 0;
+    }
+
+    public ArrayList<Alien> getAliensArray() {
+        return aliens;
     }
 }

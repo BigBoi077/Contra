@@ -2,7 +2,6 @@ package cegepst;
 
 import cegepst.engine.Buffer;
 import cegepst.engine.Game;
-import cegepst.engine.entity.StaticEntity;
 
 import java.util.ArrayList;
 
@@ -13,7 +12,9 @@ public class ContraGame extends Game {
     private final World level;
     private final LeftBorder leftBorder;
     private final Camera camera;
+    private final AlienSpawner alienSpawner;
     private final ArrayList<Bullet> bullets;
+    private final ArrayList<Alien> aliens;
 
     public ContraGame() {
         gamePad = new GamePad();
@@ -21,8 +22,10 @@ public class ContraGame extends Game {
         player = new Player(gamePad);
         camera = new Camera(player, 0);
         leftBorder = new LeftBorder(player);
+        alienSpawner = new AlienSpawner(player);
         bullets = new ArrayList<>();
         player.teleport(100, 0);
+        aliens = alienSpawner.getAliensArray();
     }
 
     @Override
@@ -39,6 +42,7 @@ public class ContraGame extends Game {
     public void update() {
         player.update();
         leftBorder.update();
+        alienSpawner.update();
         camera.update();
         if (gamePad.isQuitPressed()) {
             super.stop();
@@ -49,6 +53,9 @@ public class ContraGame extends Game {
         for (Bullet bullet : bullets) {
             bullet.update();
         }
+        for (Alien alien : aliens) {
+            alien.update();
+        }
     }
 
     @Override
@@ -56,8 +63,11 @@ public class ContraGame extends Game {
         buffer.translate(camera.getxOffset());
         level.draw(buffer);
         leftBorder.draw(buffer);
-        for (StaticEntity entity : bullets) {
-            entity.draw(buffer);
+        for (Bullet bullet : bullets) {
+            bullet.draw(buffer);
+        }
+        for (Alien alien : aliens) {
+            alien.draw(buffer);
         }
         buffer.translate(-camera.getxOffset());
         player.draw(buffer, camera.getxOffset());
