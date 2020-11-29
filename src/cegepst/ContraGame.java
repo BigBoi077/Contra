@@ -16,6 +16,8 @@ public class ContraGame extends Game {
     private final ArrayList<Bullet> bullets;
     private final ArrayList<Alien> aliens;
 
+    private final Alien crawler;
+
     public ContraGame() {
         gamePad = new GamePad();
         level = new World();
@@ -26,6 +28,9 @@ public class ContraGame extends Game {
         bullets = new ArrayList<>();
         player.teleport(100, 0);
         aliens = alienSpawner.getAliensArray();
+
+        crawler = new Crawler(player);
+        crawler.spawn();
     }
 
     @Override
@@ -42,7 +47,8 @@ public class ContraGame extends Game {
     public void update() {
         player.update();
         leftBorder.update();
-        alienSpawner.update();
+        crawler.update();
+        // alienSpawner.update();
         camera.update();
         if (gamePad.isQuitPressed()) {
             super.stop();
@@ -53,9 +59,7 @@ public class ContraGame extends Game {
         for (Bullet bullet : bullets) {
             bullet.update();
         }
-        for (Alien alien : aliens) {
-            alien.update();
-        }
+
     }
 
     @Override
@@ -66,9 +70,8 @@ public class ContraGame extends Game {
         for (Bullet bullet : bullets) {
             bullet.draw(buffer);
         }
-        for (Alien alien : aliens) {
-            alien.draw(buffer);
-        }
+        crawler.draw(buffer);
+
         buffer.translate(-camera.getxOffset());
         player.draw(buffer, camera.getxOffset());
     }

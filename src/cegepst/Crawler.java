@@ -16,7 +16,7 @@ public class Crawler extends Alien {
     public Crawler(Player player) {
         animator = new Animator(this);
         nbrLives = 3;
-        super.isGravityApplied = true;
+        super.isGravityApplied = false;
         this.player = player;
         initSpritesheet();
         initFrames();
@@ -36,7 +36,7 @@ public class Crawler extends Alien {
 
     @Override
     public void draw(Buffer buffer) {
-        if (nearPlayer()) {
+        if (nearPlayer() && player.isJumping()) {
             animator.drawCurrentAnimation(secondaryFrames, buffer, 0);
         } else {
             animator.drawCurrentAnimation(mainFrames, buffer, 0);
@@ -59,12 +59,13 @@ public class Crawler extends Alien {
     @Override
     public void readSprites() {
         spriteReader.readRightSpriteSheet(mainFrames, AlienSpritesheetInfo.CRAWLER_START_X, AlienSpritesheetInfo.CRAWLER_START_Y, CRAWLER_WIDTH, CRAWLER_HEIGHT, mainFrames.length);
-        spriteReader.readRightSpriteSheet(mainFrames, AlienSpritesheetInfo.CRAWLER_ATTACK_START_X, AlienSpritesheetInfo.CRAWLER_ATTACK_START_Y, CRAWLER_WIDTH, CRAWLER_HEIGHT, mainFrames.length);
+        spriteReader.readRightSpriteSheet(secondaryFrames, AlienSpritesheetInfo.CRAWLER_ATTACK_START_X, AlienSpritesheetInfo.CRAWLER_ATTACK_START_Y, CRAWLER_WIDTH, CRAWLER_HEIGHT, secondaryFrames.length);
     }
 
     @Override
     public void cycleFrames() {
-        if (nearPlayer()) {
+        if (nearPlayer() && player.isJumping()) {
+            Debuger.consoleLog("Attack");
             animator.cycleFrames(secondaryFrames);
         } else {
             animator.cycleFrames(mainFrames);
@@ -73,7 +74,7 @@ public class Crawler extends Alien {
 
     @Override
     public boolean nearPlayer() {
-        return x - player.getX() < 50;
+        return x - player.getX() < 100;
     }
 
     @Override
