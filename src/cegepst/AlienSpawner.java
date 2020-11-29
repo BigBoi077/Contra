@@ -9,9 +9,10 @@ public class AlienSpawner {
 
     private final Random random;
     private final Player player;
-    private final ArrayList<Alien> aliens;
-    private int coinToss;
     private Crawler crawler;
+    private Runner runner;
+    private int coinToss;
+    private final ArrayList<Alien> aliens;
 
     public AlienSpawner(Player player) {
         this.player = player;
@@ -24,9 +25,16 @@ public class AlienSpawner {
     }
 
     private void spawnAlien() {
-        crawler = new Crawler(player);
-        aliens.add(crawler);
-        crawler.spawn();
+        coinToss = random.nextInt(2);
+        if (coinToss == 1) {
+            crawler = new Crawler(player);
+            aliens.add(crawler);
+            crawler.spawn();
+        } else {
+            runner = new Runner(player);
+            aliens.add(runner);
+            runner.spawn();
+        }
     }
 
     private void updateSpawnCooldown() {

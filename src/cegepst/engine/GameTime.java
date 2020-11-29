@@ -9,6 +9,7 @@ public class GameTime {
     private static int fpsCount;
     private static long fpsTimeDelta;
     private static long gameStartTime;
+    private static long sleep;
     private long syncTime;
 
     public static long getCurrentTime() {
@@ -21,6 +22,10 @@ public class GameTime {
 
     public static long getElapsedTime() {
         return System.currentTimeMillis() - gameStartTime;
+    }
+
+    public static long getTimeToSleep() {
+        return sleep;
     }
 
     public static String getElapsedFormattedTime() {
@@ -66,9 +71,9 @@ public class GameTime {
         syncTime = System.currentTimeMillis();
     }
 
-    private long getSleepTime() {
+    public long getSleepTime() {
         long targetTime = 1000L / FPS_TARGET;
-        long sleep = targetTime -
+        sleep = targetTime -
                 (System.currentTimeMillis() - syncTime);
         if (sleep < 0) {
             sleep = 4;

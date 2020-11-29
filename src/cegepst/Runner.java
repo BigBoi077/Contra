@@ -7,9 +7,8 @@ import java.awt.*;
 
 public class Runner extends Alien {
 
-    public static final int WIDTH = 33;
-    public static final int HEIGHT = 45;
-    private final String SPRITE_PATH = "images/AliensSprites.png";
+    public static final int WIDTH = 66;
+    public static final int HEIGHT = 90;
     private final Player player;
 
     public Runner(Player player) {

@@ -7,16 +7,15 @@ import java.awt.*;
 
 public class Crawler extends Alien {
 
-    public static final int WIDTH = 33;
-    public static final int HEIGHT = 32;
-    private final String SPRITE_PATH = "images/AliensSprites.png";
+    public static final int WIDTH = 66;
+    public static final int HEIGHT = 64;
     private final Player player;
 
     public Crawler(Player player) {
         animator = new Animator(this);
         nbrLives = 3;
         super.setSpeed(4);
-        super.isGravityApplied = false;
+        super.isGravityApplied = true;
         this.player = player;
         initSpritesheet();
         initFrames();

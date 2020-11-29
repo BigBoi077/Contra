@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 
 abstract class Alien extends MovableEntity {
 
+    protected final String SPRITE_PATH = "images/AliensSpritesResized.png";
     protected Animator animator;
     protected SpriteReader spriteReader;
     protected ImagesReader imagesReader;
