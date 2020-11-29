@@ -2,20 +2,20 @@ package cegepst;
 
 import cegepst.engine.Buffer;
 import cegepst.engine.CollidableRepository;
-import cegepst.engine.controls.Direction;
 
 import java.awt.*;
 
 public class Crawler extends Alien {
 
-    public static final int CRAWLER_WIDTH = 33;
-    public static final int CRAWLER_HEIGHT = 32;
+    public static final int WIDTH = 33;
+    public static final int HEIGHT = 32;
     private final String SPRITE_PATH = "images/AliensSprites.png";
     private final Player player;
 
     public Crawler(Player player) {
         animator = new Animator(this);
         nbrLives = 3;
+        super.setSpeed(4);
         super.isGravityApplied = false;
         this.player = player;
         initSpritesheet();
@@ -26,18 +26,21 @@ public class Crawler extends Alien {
 
     @Override
     public void update() {
+        if (isDead) {
+            return;
+        }
         super.update();
         if (player.isJumping()) {
             super.startJump();
         }
         cycleFrames();
-        move(Direction.LEFT);
+        moveLeft();
     }
 
     @Override
     public void draw(Buffer buffer) {
         if (nearPlayer() && player.isJumping()) {
-            animator.drawCurrentAnimation(secondaryFrames, buffer, 0);
+            animator.drawCurrentAnimation(attackFrames, buffer, 0);
         } else {
             animator.drawCurrentAnimation(mainFrames, buffer, 0);
         }
@@ -53,20 +56,20 @@ public class Crawler extends Alien {
     @Override
     public void initFrames() {
         mainFrames = new Image[4];
-        secondaryFrames = new Image[2];
+        attackFrames = new Image[2];
     }
 
     @Override
     public void readSprites() {
-        spriteReader.readRightSpriteSheet(mainFrames, AlienSpritesheetInfo.CRAWLER_START_X, AlienSpritesheetInfo.CRAWLER_START_Y, CRAWLER_WIDTH, CRAWLER_HEIGHT, mainFrames.length);
-        spriteReader.readRightSpriteSheet(secondaryFrames, AlienSpritesheetInfo.CRAWLER_ATTACK_START_X, AlienSpritesheetInfo.CRAWLER_ATTACK_START_Y, CRAWLER_WIDTH, CRAWLER_HEIGHT, secondaryFrames.length);
+        spriteReader.readRightSpriteSheet(mainFrames, AlienSpritesheetInfo.CRAWLER_START_X, AlienSpritesheetInfo.CRAWLER_START_Y, WIDTH, HEIGHT, mainFrames.length);
+        spriteReader.readRightSpriteSheet(attackFrames, AlienSpritesheetInfo.CRAWLER_ATTACK_START_X, AlienSpritesheetInfo.CRAWLER_ATTACK_START_Y, WIDTH, HEIGHT, attackFrames.length);
     }
 
     @Override
     public void cycleFrames() {
         if (nearPlayer() && player.isJumping()) {
             Debuger.consoleLog("Attack");
-            animator.cycleFrames(secondaryFrames);
+            animator.cycleFrames(attackFrames);
         } else {
             animator.cycleFrames(mainFrames);
         }
@@ -80,5 +83,9 @@ public class Crawler extends Alien {
     @Override
     public void spawn() {
         teleport(player.getX() + 550, 0);
+    }
+
+    public void setIsDead(boolean isDead) {
+        super.isDead = isDead;
     }
 }

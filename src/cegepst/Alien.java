@@ -12,8 +12,10 @@ abstract class Alien extends MovableEntity {
     protected ImagesReader imagesReader;
     protected BufferedImage spritesheet;
     protected Image[] mainFrames;
-    protected Image[] secondaryFrames;
+    protected Image[] attackFrames;
+    protected Image[] deathFrames;
     protected int nbrLives;
+    protected boolean isDead;
 
     public abstract void initSpritesheet();
 

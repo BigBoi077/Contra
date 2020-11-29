@@ -29,7 +29,7 @@ public class ContraGame extends Game {
         player.teleport(100, 0);
         aliens = alienSpawner.getAliensArray();
 
-        crawler = new Crawler(player);
+        crawler = new Runner(player);
         crawler.spawn();
     }
 
