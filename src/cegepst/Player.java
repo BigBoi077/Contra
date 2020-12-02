@@ -1,7 +1,6 @@
 package cegepst;
 
 import cegepst.engine.Buffer;
-import cegepst.engine.CollidableRepository;
 import cegepst.engine.controls.Direction;
 import cegepst.engine.entity.ControllableEntity;
 
@@ -39,7 +38,7 @@ public class Player extends ControllableEntity {
         super.setDimension(87, 102);
         super.setSpeed(2);
         initClassContent();
-        CollidableRepository.getInstance().registerEntity(this);
+        // CollidableRepository.getInstance().registerEntity(this);
     }
 
     public Bullet fire() {

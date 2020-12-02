@@ -57,7 +57,6 @@ public class Runner extends Alien {
             return;
         }
         if (nearPlayer() && player.isJumping()) {
-            Debuger.consoleLog("Attack");
             animator.cycleFrames(attackFrames);
         } else {
             animator.cycleFrames(mainFrames);
@@ -72,6 +71,14 @@ public class Runner extends Alien {
     @Override
     public void spawn() {
         teleport(player.getX() + 100, 200);
+    }
+
+    @Override
+    public void decrementHealth() {
+        this.nbrLives--;
+        if (this.nbrLives == 0) {
+            this.isDead = true;
+        }
     }
 
     public void setIsDead(boolean isDead) {

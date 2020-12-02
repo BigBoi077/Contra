@@ -10,7 +10,7 @@ public class Crawler extends Alien {
     public Crawler(Player player) {
         animator = new Animator(this);
         nbrLives = 3;
-        super.setSpeed(4);
+        super.setSpeed(1);
         super.setDimension(AlienSpritesheetInfo.CRAWLER_WIDTH, AlienSpritesheetInfo.CRAWLER_HEIGHT);
         super.isGravityApplied = true;
         this.player = player;
@@ -49,7 +49,6 @@ public class Crawler extends Alien {
     @Override
     public void cycleFrames() {
         if (nearPlayer() && player.isJumping()) {
-            Debuger.consoleLog("Attack");
             animator.cycleFrames(attackFrames);
         } else {
             animator.cycleFrames(mainFrames);
@@ -64,6 +63,14 @@ public class Crawler extends Alien {
     @Override
     public void spawn() {
         teleport(player.getX() + 550, 0);
+    }
+
+    @Override
+    public void decrementHealth() {
+        this.nbrLives--;
+        if (this.nbrLives == 0) {
+            this.isDead = true;
+        }
     }
 
     public void setIsDead(boolean isDead) {
