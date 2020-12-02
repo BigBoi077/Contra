@@ -1,11 +1,15 @@
 package cegepst;
 
 public class AlienSpritesheetInfo {
+    public static final int CRAWLER_WIDTH = 66;
+    public static final int CRAWLER_HEIGHT = 64;
     public static final int CRAWLER_START_X = 2;
     public static final int CRAWLER_START_Y = 20;
     public static final int CRAWLER_ATTACK_START_X = 270;
     public static final int CRAWLER_ATTACK_START_Y = 20;
 
+    public static final int RUNNER_WIDTH = 66;
+    public static final int RUNNER_HEIGHT = 90;
     public static final int RUNNER_START_X = 0;
     public static final int RUNNER_START_Y = 410;
     public static final int RUNNER_ATTACK_WIDTH = 66;

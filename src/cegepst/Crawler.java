@@ -3,12 +3,8 @@ package cegepst;
 import cegepst.engine.Buffer;
 import cegepst.engine.CollidableRepository;
 
-import java.awt.*;
-
 public class Crawler extends Alien {
 
-    public static final int WIDTH = 66;
-    public static final int HEIGHT = 64;
     private final Player player;
 
     public Crawler(Player player) {
@@ -17,9 +13,7 @@ public class Crawler extends Alien {
         super.setSpeed(4);
         super.isGravityApplied = true;
         this.player = player;
-        initSpritesheet();
         initFrames();
-        readSprites();
         CollidableRepository.getInstance().registerEntity(this);
     }
 
@@ -46,22 +40,9 @@ public class Crawler extends Alien {
     }
 
     @Override
-    public void initSpritesheet() {
-        imagesReader = new ImagesReader();
-        spritesheet = imagesReader.readImage(SPRITE_PATH);
-        this.spriteReader = new SpriteReader(spritesheet);
-    }
-
-    @Override
     public void initFrames() {
-        mainFrames = new Image[4];
-        attackFrames = new Image[2];
-    }
-
-    @Override
-    public void readSprites() {
-        spriteReader.readRightSpriteSheet(mainFrames, AlienSpritesheetInfo.CRAWLER_START_X, AlienSpritesheetInfo.CRAWLER_START_Y, WIDTH, HEIGHT, mainFrames.length);
-        spriteReader.readRightSpriteSheet(attackFrames, AlienSpritesheetInfo.CRAWLER_ATTACK_START_X, AlienSpritesheetInfo.CRAWLER_ATTACK_START_Y, WIDTH, HEIGHT, attackFrames.length);
+        mainFrames = AlienTextures.getMainCrawlerFrames();
+        attackFrames = AlienTextures.getAttackCrawlerFrames();
     }
 
     @Override

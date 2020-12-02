@@ -66,7 +66,7 @@ public class Collision {
         for (StaticEntity other : CollidableRepository.getInstance()) {
             if (collisionBound.intersects(other.getBounds())) {
                 allowedDistance = Math.min(allowedDistance,
-                        calculator.calculateWith(other));
+                        Math.abs(calculator.calculateWith(other)));
             }
         }
         return allowedDistance;

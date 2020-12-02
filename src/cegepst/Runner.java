@@ -3,12 +3,8 @@ package cegepst;
 import cegepst.engine.Buffer;
 import cegepst.engine.CollidableRepository;
 
-import java.awt.*;
-
 public class Runner extends Alien {
 
-    public static final int WIDTH = 66;
-    public static final int HEIGHT = 90;
     private final Player player;
 
     public Runner(Player player) {
@@ -17,9 +13,7 @@ public class Runner extends Alien {
         super.setSpeed(4);
         super.isGravityApplied = true;
         this.player = player;
-        initSpritesheet();
         initFrames();
-        readSprites();
         CollidableRepository.getInstance().registerEntity(this);
     }
 
@@ -50,24 +44,10 @@ public class Runner extends Alien {
     }
 
     @Override
-    public void initSpritesheet() {
-        imagesReader = new ImagesReader();
-        spritesheet = imagesReader.readImage(SPRITE_PATH);
-        this.spriteReader = new SpriteReader(spritesheet);
-    }
-
-    @Override
     public void initFrames() {
-        mainFrames = new Image[6];
-        attackFrames = new Image[2];
-        deathFrames = new Image[4];
-    }
-
-    @Override
-    public void readSprites() {
-        spriteReader.readRightSpriteSheet(mainFrames, AlienSpritesheetInfo.RUNNER_START_X, AlienSpritesheetInfo.RUNNER_START_Y, WIDTH, HEIGHT, mainFrames.length);
-        spriteReader.readRightSpriteSheet(attackFrames, AlienSpritesheetInfo.RUNNER_ATTACK_START_X, AlienSpritesheetInfo.RUNNER_ATTACK_START_Y, AlienSpritesheetInfo.RUNNER_ATTACK_WIDTH, HEIGHT, attackFrames.length);
-        spriteReader.readRightSpriteSheet(deathFrames, AlienSpritesheetInfo.RUNNER_DEATH_START_X, AlienSpritesheetInfo.RUNNER_DEATH_START_Y, AlienSpritesheetInfo.RUNNER_DEATH_FRAMES_WIDTH, AlienSpritesheetInfo.RUNNER_DEATH_FRAMES_HEIGHT, deathFrames.length);
+        mainFrames = AlienTextures.getMainRunnerFrames();
+        attackFrames = AlienTextures.getAttackRunnerFrames();
+        deathFrames = AlienTextures.getDeathRunnerFrames();
     }
 
     @Override

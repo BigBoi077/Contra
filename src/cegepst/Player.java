@@ -38,7 +38,7 @@ public class Player extends ControllableEntity {
         this.gamePad = gamePad;
         this.numberLives = GameSettings.NUMBER_PLAYER_LIVES;
         super.setDimension(87, 102);
-        super.setSpeed(4);
+        super.setSpeed(2);
         initClassContent();
         CollidableRepository.getInstance().registerEntity(this);
     }

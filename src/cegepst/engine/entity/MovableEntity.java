@@ -121,6 +121,8 @@ public abstract class MovableEntity extends UpdatableEntity {
                 // Make sure to apply basic speed for other cases
                 collision.setSpeed(speed);
             }
+        } else {
+            collision.setSpeed(speed);
         }
         this.direction = direction;
         int allowedSpeed = collision.getAllowedSpeed(direction);

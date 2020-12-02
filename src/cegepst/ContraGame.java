@@ -12,6 +12,7 @@ public class ContraGame extends Game {
     private final World level;
     private final LeftBorder leftBorder;
     private final Camera camera;
+    private final AlienTextures alienTextures;
     private final AlienSpawner alienSpawner;
     private final ArrayList<Bullet> bullets;
     private final ArrayList<Alien> aliens;
@@ -22,6 +23,7 @@ public class ContraGame extends Game {
         player = new Player(gamePad);
         camera = new Camera(player, 0);
         leftBorder = new LeftBorder(player);
+        alienTextures = new AlienTextures();
         alienSpawner = new AlienSpawner(player);
         bullets = new ArrayList<>();
         player.teleport(100, 0);
