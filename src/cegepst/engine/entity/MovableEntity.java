@@ -18,11 +18,9 @@ public abstract class MovableEntity extends UpdatableEntity {
     protected int currentJumpMeter = 0;
     protected double gravity = 1; // falling speed;
     private double jumpSpeed = 4;
-    protected int definedAllowedSpeed;
     protected boolean jumping = false;
     protected boolean falling = false;
     protected boolean isGravityApplied;
-    protected boolean isDefinedAllowedSpeed;
 
     public MovableEntity() {
         collision = new Collision(this);
@@ -126,9 +124,6 @@ public abstract class MovableEntity extends UpdatableEntity {
         }
         this.direction = direction;
         int allowedSpeed = collision.getAllowedSpeed(direction);
-        if (isDefinedAllowedSpeed) {
-            allowedSpeed = definedAllowedSpeed;
-        }
         x += direction.getVelocityX(allowedSpeed);
         y += direction.getVelocityY(allowedSpeed);
     }

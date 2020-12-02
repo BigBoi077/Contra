@@ -34,7 +34,6 @@ public class Player extends ControllableEntity {
     public Player(GamePad gamePad) {
         super(gamePad);
         super.isGravityApplied = true;
-        super.isDefinedAllowedSpeed = false;
         this.gamePad = gamePad;
         this.numberLives = GameSettings.NUMBER_PLAYER_LIVES;
         super.setDimension(87, 102);

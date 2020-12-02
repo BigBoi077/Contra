@@ -13,7 +13,6 @@ public class Bullet extends MovableEntity {
 
     public Bullet(Player player) {
         super.setSpeed(15);
-        //super.isDefinedAllowedSpeed = true;
         super.isGravityApplied = false;
         super.setDimensions(4, 4);
         playerDirection = player.getDirection();
@@ -33,7 +32,6 @@ public class Bullet extends MovableEntity {
     public void update() {
         super.update();
         super.move(playerDirection);
-        //super.definedAllowedSpeed = 10;
         if (x >= 820 || x < 0) {
             CollidableRepository.getInstance().unregisterEntity(this);
         }

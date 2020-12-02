@@ -11,6 +11,7 @@ public class Crawler extends Alien {
         animator = new Animator(this);
         nbrLives = 3;
         super.setSpeed(4);
+        super.setDimension(AlienSpritesheetInfo.CRAWLER_WIDTH, AlienSpritesheetInfo.CRAWLER_HEIGHT);
         super.isGravityApplied = true;
         this.player = player;
         initFrames();
