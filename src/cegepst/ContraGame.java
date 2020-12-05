@@ -48,11 +48,10 @@ public class ContraGame extends Game {
     public void update() {
         player.update();
         alienSpawner.update();
-
         leftBorder.update();
         camera.update();
 
-        if (gamePad.isQuitPressed()) {
+        if (gamePad.isQuitPressed() || player.getNumberLives() == 0) {
             super.stop();
         }
         if (gamePad.isFirePressed() && player.canFire()) {
@@ -79,11 +78,23 @@ public class ContraGame extends Game {
     }
 
     private void updateEntities() {
-        ArrayList<StaticEntity> killedElements = new ArrayList<>();
         for (Bullet bullet : bullets) {
             bullet.update();
-            for (Alien alien : aliens) {
-                alien.update();
+        }
+        for (Alien alien : aliens) {
+            alien.update();
+        }
+        ArrayList<StaticEntity> killedElements = new ArrayList<>();
+        checkEntitiesCollisions(killedElements);
+        killUnwantedEntities(killedElements);
+    }
+
+    private void checkEntitiesCollisions(ArrayList<StaticEntity> killedElements) {
+        for (Alien alien : aliens) {
+            for (Bullet bullet : bullets) {
+                if (bullet.needToDeleteBullet()) {
+                    killedElements.add(bullet);
+                }
                 if (bullet.collisionBoundIntersectWith(alien)) {
                     killedElements.add(bullet);
                     alien.decrementHealth();
@@ -91,11 +102,14 @@ public class ContraGame extends Game {
                         killedElements.add(alien);
                     }
                 }
-                if (player.collisionBoundIntersectWith(alien) || player.collisionBoundIntersectWith(leftBorder)) {
-                    player.setDead(true);
-                }
+            }
+            if (player.collisionBoundIntersectWith(alien) || player.collisionBoundIntersectWith(leftBorder)) {
+                player.setDead(true);
             }
         }
+    }
+
+    private void killUnwantedEntities(ArrayList<StaticEntity> killedElements) {
         for (StaticEntity killedElement : killedElements) {
             if (killedElement instanceof Alien) {
                 aliens.remove(killedElement);

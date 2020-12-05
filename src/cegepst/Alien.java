@@ -19,7 +19,7 @@ abstract class Alien extends MovableEntity {
 
     public abstract boolean nearPlayer();
 
-    public abstract void spawn(int leftRightRandom);
+    public abstract void spawn();
 
     public abstract void decrementHealth();
 }

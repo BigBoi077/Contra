@@ -12,7 +12,7 @@ public class LeftBorder extends UpdatableEntity {
 
     public LeftBorder(Player player) {
         this.player = player;
-        super.x = -50;
+        super.x = -45;
         super.setDimension(50, 600);
         CollidableRepository.getInstance().registerEntity(this);
     }

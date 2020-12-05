@@ -63,7 +63,7 @@ public class Crawler extends Alien {
     }
 
     @Override
-    public void spawn(int leftRightRandom) {
+    public void spawn() {
         teleport(player.getX() + 1000, 0);
     }
 

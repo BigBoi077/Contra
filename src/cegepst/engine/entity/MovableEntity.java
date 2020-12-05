@@ -11,12 +11,12 @@ public abstract class MovableEntity extends UpdatableEntity {
     private final Collision collision;
     private Direction direction = Direction.UP;
     protected int speed = 1;
-    protected final int jumpMaxHeight = 24; // jumping max
+    protected final int jumpMaxHeight = 24;
     protected int lastX;
     private boolean moved;
     protected int lastY;
     protected int currentJumpMeter = 0;
-    protected double gravity = 1; // falling speed;
+    protected double gravity = 1;
     private double jumpSpeed = 4;
     protected boolean jumping = false;
     protected boolean falling = false;
@@ -36,7 +36,7 @@ public abstract class MovableEntity extends UpdatableEntity {
                     fall();
                 } else {
                     falling = false;
-                    gravity = 1; // reset
+                    gravity = 1;
                 }
             }
         }
@@ -49,14 +49,14 @@ public abstract class MovableEntity extends UpdatableEntity {
     private void jump() {
         move(Direction.UP);
         currentJumpMeter++;
-        jumpSpeed -= 0.05; // deceleration
+        jumpSpeed -= 0.05;
         if (jumpSpeed < 1) {
-            jumpSpeed = 1; // minimum
+            jumpSpeed = 1;
         }
         if (currentJumpMeter == jumpMaxHeight) {
             jumping = false;
             currentJumpMeter = 0;
-            jumpSpeed = 4; // reset
+            jumpSpeed = 4;
         }
     }
 
@@ -68,7 +68,7 @@ public abstract class MovableEntity extends UpdatableEntity {
     private void fall() {
         falling = true;
         move(Direction.DOWN);
-        gravity += GameSettings.GRAVITY_ACCELERATION; // Acceleration constant (custom to game)
+        gravity += GameSettings.GRAVITY_ACCELERATION;
     }
 
     public void startJump() {
@@ -76,10 +76,10 @@ public abstract class MovableEntity extends UpdatableEntity {
             return;
         }
         if (falling) {
-            return; // prevent double jumps
+            return;
         }
-        if (collision.getAllowedSpeed(Direction.DOWN) > 0) { // should keep in memory since its called often
-            return; // prevent continous jump midair
+        if (collision.getAllowedSpeed(Direction.DOWN) > 0) {
+            return;
         }
         jumping = true;
     }
@@ -110,13 +110,10 @@ public abstract class MovableEntity extends UpdatableEntity {
     public void move(Direction direction) {
         if (GameSettings.GRAVITY_ENABLED && isGravityApplied) {
             if (jumping) {
-                // Limit movement in midair (jump mobility)
                 collision.setSpeed(direction == Direction.UP ? (int) jumpSpeed : 2);
             } else if (falling) {
-                // Limit movement in midair (fall mobility)
                 collision.setSpeed((direction == Direction.DOWN) ? (int) gravity : 2);
             } else {
-                // Make sure to apply basic speed for other cases
                 collision.setSpeed(speed);
             }
         } else {

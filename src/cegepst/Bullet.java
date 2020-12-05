@@ -10,8 +10,10 @@ import java.awt.*;
 public class Bullet extends MovableEntity {
 
     private final Direction playerDirection;
+    private final Player player;
 
     public Bullet(Player player) {
+        this.player = player;
         super.setSpeed(15);
         super.isGravityApplied = false;
         super.setDimensions(4, 4);
@@ -28,11 +30,15 @@ public class Bullet extends MovableEntity {
         CollidableRepository.getInstance().registerEntity(this);
     }
 
+    public boolean needToDeleteBullet() {
+        return x > player.getX() + 1000 || x < player.getX() - 1000;
+    }
+
     @Override
     public void update() {
         super.update();
         super.move(playerDirection);
-        if (x >= 820 || x < 0) {
+        if (needToDeleteBullet()) {
             CollidableRepository.getInstance().unregisterEntity(this);
         }
     }
