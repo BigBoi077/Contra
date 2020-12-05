@@ -24,7 +24,7 @@ public class ContraGame extends Game {
         gamePad = new GamePad();
         level = new World();
         player = new Player(gamePad);
-        camera = new Camera(player, 0);
+        camera = new Camera(0);
         hud = new HUD();
         leftBorder = new LeftBorder(player);
         alienSpawner = new AlienSpawner(player);
@@ -47,9 +47,11 @@ public class ContraGame extends Game {
     @Override
     public void update() {
         player.update();
-        leftBorder.update();
         alienSpawner.update();
+
+        leftBorder.update();
         camera.update();
+
         if (gamePad.isQuitPressed()) {
             super.stop();
         }
@@ -89,7 +91,7 @@ public class ContraGame extends Game {
                         killedElements.add(alien);
                     }
                 }
-                if (player.collisionBoundIntersectWith(alien)) {
+                if (player.collisionBoundIntersectWith(alien) || player.collisionBoundIntersectWith(leftBorder)) {
                     player.setDead(true);
                 }
             }

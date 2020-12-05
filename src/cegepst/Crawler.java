@@ -2,14 +2,16 @@ package cegepst;
 
 import cegepst.engine.Buffer;
 import cegepst.engine.CollidableRepository;
+import cegepst.engine.controls.Direction;
 
 public class Crawler extends Alien {
 
     private final Player player;
+    private Direction direction;
 
     public Crawler(Player player) {
         animator = new Animator(this);
-        nbrLives = 3;
+        nbrLives = 1;
         super.setSpeed(1);
         super.setDimension(AlienSpritesheetInfo.CRAWLER_WIDTH, AlienSpritesheetInfo.CRAWLER_HEIGHT);
         super.isGravityApplied = true;
@@ -61,8 +63,8 @@ public class Crawler extends Alien {
     }
 
     @Override
-    public void spawn() {
-        teleport(player.getX() + 550, 0);
+    public void spawn(int leftRightRandom) {
+        teleport(player.getX() + 1000, 0);
     }
 
     @Override

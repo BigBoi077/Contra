@@ -9,7 +9,7 @@ public class Runner extends Alien {
 
     public Runner(Player player) {
         animator = new Animator(this);
-        nbrLives = 3;
+        nbrLives = 1;
         super.setSpeed(4);
         super.setDimensions(AlienSpritesheetInfo.RUNNER_WIDTH, AlienSpritesheetInfo.RUNNER_HEIGHT);
         super.isGravityApplied = true;
@@ -69,8 +69,8 @@ public class Runner extends Alien {
     }
 
     @Override
-    public void spawn() {
-        teleport(player.getX() + 100, 200);
+    public void spawn(int leftRightRandom) {
+        teleport(player.getX() + 1000, 200);
     }
 
     @Override

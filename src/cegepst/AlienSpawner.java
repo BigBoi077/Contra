@@ -12,6 +12,7 @@ public class AlienSpawner {
     private Crawler crawler;
     private Runner runner;
     private int coinToss;
+    private int leftRightRandom;
     private final ArrayList<Alien> aliens;
 
     public AlienSpawner(Player player) {
@@ -26,14 +27,15 @@ public class AlienSpawner {
 
     private void spawnAlien() {
         coinToss = random.nextInt(2);
+        leftRightRandom = random.nextInt(11);
         if (coinToss == 1) {
             crawler = new Crawler(player);
             aliens.add(crawler);
-            crawler.spawn();
+            crawler.spawn(leftRightRandom);
         } else {
             runner = new Runner(player);
             aliens.add(runner);
-            runner.spawn();
+            runner.spawn(leftRightRandom);
         }
     }
 
