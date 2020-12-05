@@ -19,21 +19,13 @@ public class LeftBorder extends UpdatableEntity {
 
     @Override
     public void update() {
-        if (!player.isCentered(this)) {
-            centerBorder();
-        }
+        super.x++;
     }
 
     @Override
     public void draw(Buffer buffer) {
         if (GameSettings.DEBUG_ENABLED) {
             buffer.drawRectangle(x, y, width, height, Color.BLUE);
-        }
-    }
-
-    private void centerBorder() {
-        for (; player.getX() - this.x > 400; ) {
-            super.x++;
         }
     }
 }

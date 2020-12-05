@@ -23,9 +23,10 @@ public class HUD {
         lifeSymbol = spriteReader.readSingleFrame(SymbolSpritesheetInfo.LIFE_SYMBOL_START_X, SymbolSpritesheetInfo.LIFE_SYMBOL_START_Y, SymbolSpritesheetInfo.LIFE_SYMBOL_START_WIDTH, SymbolSpritesheetInfo.LIFE_SYMBOL_START_HEIGHT);
     }
 
-    public void draw(Player player, Buffer buffer) {
+    public void draw(Player player, int score, Buffer buffer) {
         buffer.drawImage(lifeSymbol, 20, 20);
         buffer.drawText(" X " + player.getNumberLives(), 45, 32, Color.white);
-        buffer.drawText(GameTime.getElapsedFormattedTime(), 750, 20, Color.white);
+        buffer.drawText("Score : " + score, 375, 32, Color.white);
+        buffer.drawText(GameTime.getElapsedFormattedTime(), 750, 32, Color.white);
     }
 }

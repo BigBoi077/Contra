@@ -14,6 +14,7 @@ public class ContraGame extends Game {
     private final World level;
     private final LeftBorder leftBorder;
     private final Camera camera;
+    private final HUD hud;
     private final AlienSpawner alienSpawner;
     private final ArrayList<Bullet> bullets;
     private final ArrayList<Alien> aliens;
@@ -24,6 +25,7 @@ public class ContraGame extends Game {
         level = new World();
         player = new Player(gamePad);
         camera = new Camera(player, 0);
+        hud = new HUD();
         leftBorder = new LeftBorder(player);
         alienSpawner = new AlienSpawner(player);
         bullets = new ArrayList<>();
@@ -33,6 +35,7 @@ public class ContraGame extends Game {
 
     @Override
     public void initialize() {
+        bullets.add(new Bullet(player));
         alienTextures = new AlienTextures();
     }
 
@@ -46,15 +49,15 @@ public class ContraGame extends Game {
         player.update();
         leftBorder.update();
         alienSpawner.update();
-        // alienSpawner.update();
         camera.update();
         if (gamePad.isQuitPressed()) {
             super.stop();
         }
         if (gamePad.isFirePressed() && player.canFire()) {
             bullets.add(player.fire());
+            super.incrementScore(15);
         }
-        updateEnnemies();
+        updateEntities();
     }
 
     @Override
@@ -70,9 +73,10 @@ public class ContraGame extends Game {
         }
         buffer.translate(-camera.getxOffset());
         player.draw(buffer, camera.getxOffset());
+        hud.draw(player, super.score, buffer);
     }
 
-    private void updateEnnemies() {
+    private void updateEntities() {
         ArrayList<StaticEntity> killedElements = new ArrayList<>();
         for (Bullet bullet : bullets) {
             bullet.update();
@@ -85,11 +89,15 @@ public class ContraGame extends Game {
                         killedElements.add(alien);
                     }
                 }
+                if (player.collisionBoundIntersectWith(alien)) {
+                    player.setDead(true);
+                }
             }
         }
         for (StaticEntity killedElement : killedElements) {
             if (killedElement instanceof Alien) {
                 aliens.remove(killedElement);
+                super.incrementScore(50);
             } else if (killedElement instanceof Bullet) {
                 bullets.remove(killedElement);
             }

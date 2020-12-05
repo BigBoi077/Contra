@@ -4,17 +4,21 @@ import java.awt.event.KeyListener;
 
 public abstract class Game {
 
-    private RenderingEngine renderingEngine;
+    private final RenderingEngine renderingEngine;
     private GameTime gameTime;
-    private boolean playing = true;
+    protected boolean playing = true;
+    protected int score;
 
     public Game() {
         renderingEngine = RenderingEngine.getInstance();
     }
 
     public abstract void initialize();
+
     public abstract void conclude();
+
     public abstract void update();
+
     public abstract void draw(Buffer buffer);
 
     public void start() {
@@ -41,5 +45,9 @@ public abstract class Game {
             gameTime.synchronize();
         }
         renderingEngine.stop();
+    }
+
+    protected void incrementScore(int scoreAdd) {
+        this.score += scoreAdd;
     }
 }

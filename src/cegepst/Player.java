@@ -1,6 +1,7 @@
 package cegepst;
 
 import cegepst.engine.Buffer;
+import cegepst.engine.CollidableRepository;
 import cegepst.engine.controls.Direction;
 import cegepst.engine.entity.ControllableEntity;
 
@@ -13,7 +14,6 @@ public class Player extends ControllableEntity {
 
     private static final String SPRITE_PATH = "images/PlayerSpritesResized.png";
     private final GamePad gamePad;
-    private HUD hud;
     private SpriteReader spriteReader;
     private BufferedImage spriteSheet;
     private Animator animator;
@@ -27,8 +27,10 @@ public class Player extends ControllableEntity {
     private BufferedImage crouchRightFrame;
     private BufferedImage crouchLeftFrame;
     private BufferedImage deathFrame;
-    private int fireCooldown;
     private final int numberLives;
+    private int fireCooldown;
+    private int respawnCooldown;
+    private boolean isDead;
 
     public Player(GamePad gamePad) {
         super(gamePad);
@@ -38,7 +40,7 @@ public class Player extends ControllableEntity {
         super.setDimension(87, 102);
         super.setSpeed(2);
         initClassContent();
-        // CollidableRepository.getInstance().registerEntity(this);
+        CollidableRepository.getInstance().registerEntity(this);
     }
 
     public Bullet fire() {
@@ -58,31 +60,34 @@ public class Player extends ControllableEntity {
         return numberLives;
     }
 
-    public boolean isCentered(LeftBorder leftBorder) {
-        return !(x - leftBorder.getX() > 400);
-    }
-
     public boolean isJumping() {
         return super.jumping;
     }
 
     @Override
     public void update() {
-        super.update();
+        if (isDead) {
+            updateRespawnCooldown();
+            return;
+        }
         if (gamePad.isJumpPressed()) {
             if (!isCrouching()) {
                 super.startJump();
             }
         }
+        super.update();
         updateFireCooldown();
         moveAccordingToHandler();
-        // updatePlayerSize();
         cycleFrames();
         lastDirection = getDirection();
+        respawnCooldown = 60;
     }
 
     public void draw(Buffer buffer, int xOffset) {
-        hud.draw(this, buffer);
+        if (isDead) {
+            animator.drawCurrentAnimation(deathFrame, buffer, xOffset);
+            return;
+        }
         if (isCrouching()) {
             if (isMoving(Direction.RIGHT)) {
                 animator.drawCurrentAnimation(crouchRightFrame, buffer, xOffset);
@@ -144,7 +149,6 @@ public class Player extends ControllableEntity {
 
     private void initUtilitiesClasses() {
         this.animator = new Animator(this);
-        this.hud = new HUD();
     }
 
     private void initSpriteSheets() {
@@ -185,17 +189,16 @@ public class Player extends ControllableEntity {
         }
     }
 
-    private void updatePlayerSize() {
-        if (isGunning()) {
-            height = PlayerSpritesheetInfo.GUNNING_HEIGHT;
-            width = PlayerSpritesheetInfo.GUNNING_WIDTH;
-        } else if (isInTheAir()) {
-            height = PlayerSpritesheetInfo.JUMPING_HEIGHT;
-            width = PlayerSpritesheetInfo.JUMPING_WIDTH;
-        } else if (isCrouching()) {
-            height = PlayerSpritesheetInfo.CROUCH_HEIGHT;
-            width = PlayerSpritesheetInfo.CROUCH_WIDTH;
+    private void updateRespawnCooldown() {
+        respawnCooldown--;
+        if (respawnCooldown <= 0) {
+            respawn();
+            isDead = false;
         }
+    }
+
+    private void respawn() {
+        super.teleport(lastX, 150);
     }
 
     private boolean isRunning() {
@@ -208,6 +211,10 @@ public class Player extends ControllableEntity {
 
     private boolean isInTheAir() {
         return super.falling || super.jumping || super.currentJumpMeter > super.jumpMaxHeight;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
     }
 
     @Override
