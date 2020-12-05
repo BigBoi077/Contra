@@ -18,6 +18,10 @@ public class World {
         createBorders();
     }
 
+    public Blockade getEggs() {
+        return worldBorders.get(1);
+    }
+
     public void draw(Buffer buffer) {
         buffer.drawImage(background, 0, 0);
         for (Blockade blockade : worldBorders) {
@@ -27,7 +31,6 @@ public class World {
 
     private void createBorders() {
         addBlockade(6720, 200, 0, 435);
-        addBlockade(5, 650, 6600, 0);
         addBlockade(240, 150, 3000, 370);
     }
 

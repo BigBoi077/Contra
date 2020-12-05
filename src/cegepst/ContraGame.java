@@ -18,6 +18,7 @@ public class ContraGame extends Game {
     private final AlienSpawner alienSpawner;
     private final ArrayList<Bullet> bullets;
     private final ArrayList<Alien> aliens;
+    private MusicPlayer musicPlayer;
     private AlienTextures alienTextures;
 
     public ContraGame() {
@@ -37,6 +38,8 @@ public class ContraGame extends Game {
     public void initialize() {
         bullets.add(new Bullet(player));
         alienTextures = new AlienTextures();
+        musicPlayer = new MusicPlayer();
+        musicPlayer.start();
     }
 
     @Override
@@ -47,10 +50,12 @@ public class ContraGame extends Game {
     @Override
     public void update() {
         player.update();
+        if (camera.getxOffset() >= -5920) {
+            camera.update();
+            leftBorder.update();
+            musicPlayer.playBossMusic();
+        }
         alienSpawner.update();
-        leftBorder.update();
-        camera.update();
-
         if (gamePad.isQuitPressed() || player.getNumberLives() == 0) {
             super.stop();
         }
@@ -92,7 +97,7 @@ public class ContraGame extends Game {
     private void checkEntitiesCollisions(ArrayList<StaticEntity> killedElements) {
         for (Alien alien : aliens) {
             for (Bullet bullet : bullets) {
-                if (bullet.needToDeleteBullet()) {
+                if (bullet.needToDeleteBullet() || bullet.collisionBoundIntersectWith(level.getEggs())) {
                     killedElements.add(bullet);
                 }
                 if (bullet.collisionBoundIntersectWith(alien)) {
