@@ -20,6 +20,7 @@ public class ContraGame extends Game {
     private final ArrayList<Alien> aliens;
     private MusicPlayer musicPlayer;
     private AlienTextures alienTextures;
+    private boolean isBossFight = false;
 
     public ContraGame() {
         gamePad = new GamePad();
@@ -53,7 +54,6 @@ public class ContraGame extends Game {
         if (camera.getxOffset() >= -5920) {
             camera.update();
             leftBorder.update();
-            musicPlayer.playBossMusic();
         }
         alienSpawner.update();
         if (gamePad.isQuitPressed() || player.getNumberLives() == 0) {
@@ -64,6 +64,16 @@ public class ContraGame extends Game {
             super.incrementScore(15);
         }
         updateEntities();
+        checkToSwitchMusic();
+    }
+
+    private void checkToSwitchMusic() {
+        if (camera.getxOffset() <= -5920) {
+            if (!isBossFight) {
+                musicPlayer.playBossMusic();
+            }
+            isBossFight = true;
+        }
     }
 
     @Override
