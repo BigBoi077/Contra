@@ -11,6 +11,7 @@ public class AlienSpawner {
     private Runner runner;
     private int coinToss;
     private int spawnerCooldown;
+    private final int lastCooldown;
     private final ArrayList<Alien> aliens;
     private boolean canSpawn = false;
 
@@ -18,6 +19,7 @@ public class AlienSpawner {
         this.player = player;
         this.random = new Random();
         this.spawnerCooldown = 70;
+        this.lastCooldown = this.spawnerCooldown;
         aliens = new ArrayList<>();
     }
 
@@ -44,7 +46,7 @@ public class AlienSpawner {
     private void updateSpawnCooldown() {
         if (spawnerCooldown <= 0) {
             canSpawn = true;
-            spawnerCooldown = 70;
+            spawnerCooldown = lastCooldown - 5;
         }
         if (canSpawn) {
             spawnAlien();
