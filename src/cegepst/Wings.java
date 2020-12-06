@@ -15,6 +15,7 @@ public class Wings extends Alien {
 
     @Override
     public void update() {
+        teleport(queen.getX() + AlienSpritesheetInfo.QUEEN_WIDTH - 60, queen.getY() - 24);
         cycleFrames();
     }
 

@@ -46,7 +46,7 @@ public class ContraGame extends Game {
         musicPlayer = new MusicPlayer();
         musicPlayer.start();
 
-        queen = new AlienQueen(leftBorder, player);
+        queen = new AlienQueen(leftBorder);
         queen.spawn();
     }
 
@@ -99,6 +99,7 @@ public class ContraGame extends Game {
     }
 
     private void checkEntitiesCollisions(ArrayList<StaticEntity> killedElements) {
+
         for (Alien alien : aliens) {
             for (Bullet bullet : bullets) {
                 if (bullet.needToDeleteBullet() ||
@@ -163,7 +164,7 @@ public class ContraGame extends Game {
         if (camera.getxOffset() <= -5920) {
             if (!isBossFight) {
                 musicPlayer.playBossMusic();
-                queen = new AlienQueen(leftBorder, player);
+                queen = new AlienQueen(leftBorder);
                 queen.spawn();
             }
             isBossFight = true;

@@ -11,11 +11,10 @@ public class AlienQueen extends Alien {
     private final Wings wings;
     private final LeftBorder leftBorder;
     private final ArrayList<AlienBullet> alienBullets;
-    private Player player;
-    private boolean attacking;
-    private boolean spawning;
+    private int attackCooldown = 300;
+    private int spawnCooldown = 480;
 
-    public AlienQueen(LeftBorder leftBorder, Player player) {
+    public AlienQueen(LeftBorder leftBorder) {
         this.leftBorder = leftBorder;
         this.animator = new Animator(this);
         this.animator.setAnimationSpeed(10);
@@ -29,12 +28,12 @@ public class AlienQueen extends Alien {
         super.isGravityApplied = false;
         initFrames();
         CollidableRepository.getInstance().registerEntity(this);
-        attack();
     }
 
     private void attack() {
-        for (int i = 0, lastY = this.y; i < 5; i++, lastY += 40) {
-            alienBullets.add(new AlienBullet(this, this.x, lastY));
+        soundEffectPlayer.playlAlienSoundEffect("alien_attack.wav");
+        for (int i = 0, lastY = this.y, lastX = this.x; i < 5; i++, lastY += 40, lastX += 10) {
+            alienBullets.add(new AlienBullet(this, lastX, lastY));
         }
     }
 
@@ -43,14 +42,35 @@ public class AlienQueen extends Alien {
         super.update();
         cycleFrames();
         wings.update();
+        updateAttack();
+        if (isSpawning()) {
+            playSpawnSequence();
+        }
         for (AlienBullet bullet : alienBullets) {
             bullet.update();
         }
-        for (AlienBullet bullet : alienBullets) {
-            if (bullet.collisionBoundIntersectWith(leftBorder)) {
-                alienBullets.remove(bullet);
-            }
+    }
+
+    private void updateAttack() {
+        attackCooldown--;
+        if (attackCooldown <= 0) {
+            attack();
+            attackCooldown = 300;
         }
+    }
+
+    private void playSpawnSequence() {
+        cycleFrames();
+        super.update();
+        moveDown();
+        spawnCooldown--;
+        if (spawnCooldown <= 5) {
+            soundEffectPlayer.playlAlienSoundEffect("queen_roar.wav");
+        }
+    }
+
+    private boolean isSpawning() {
+        return spawnCooldown >= 0;
     }
 
     @Override
@@ -84,11 +104,9 @@ public class AlienQueen extends Alien {
 
     @Override
     public void spawn() {
-        teleport(600, 200);
+        teleport(600, -200);
         wings.spawn();
         soundEffectPlayer.playlAlienSoundEffect("queen_spawn.wav");
-        // GameTime.waitSeconds(8);
-        soundEffectPlayer.playlAlienSoundEffect("queen_roar.wav");
     }
 
     @Override
@@ -97,5 +115,9 @@ public class AlienQueen extends Alien {
         if (this.nbrLives == 0) {
             this.isDead = true;
         }
+    }
+
+    public ArrayList<AlienBullet> getAlienBullets() {
+        return alienBullets;
     }
 }
