@@ -45,9 +45,6 @@ public class ContraGame extends Game {
         alienTextures = new AlienTextures();
         musicPlayer = new MusicPlayer();
         musicPlayer.start();
-
-        queen = new AlienQueen(leftBorder);
-        queen.spawn();
     }
 
     @Override
@@ -59,10 +56,12 @@ public class ContraGame extends Game {
     public void update() {
         player.update();
         if (camera.getxOffset() >= -5920) {
-            // camera.update();
-            // leftBorder.update();
+            camera.update();
+            leftBorder.update();
         }
-        queen.update();
+        if (queen != null) {
+            queen.update();
+        }
         alienSpawner.update();
         manageKeyPresses();
         updateEntities();
@@ -74,7 +73,9 @@ public class ContraGame extends Game {
         buffer.translate(camera.getxOffset());
         level.draw(buffer);
         leftBorder.draw(buffer);
-        queen.draw(buffer);
+        if (queen != null) {
+            queen.draw(buffer);
+        }
         for (Bullet bullet : bullets) {
             bullet.draw(buffer);
         }
@@ -99,7 +100,12 @@ public class ContraGame extends Game {
     }
 
     private void checkEntitiesCollisions(ArrayList<StaticEntity> killedElements) {
-
+        ArrayList<AlienBullet> alienBullets = null;
+        if (queen != null) {
+            if (queen.getAlienBullets() != null) {
+                alienBullets = queen.getAlienBullets();
+            }
+        }
         for (Alien alien : aliens) {
             for (Bullet bullet : bullets) {
                 if (bullet.needToDeleteBullet() ||
@@ -115,18 +121,33 @@ public class ContraGame extends Game {
                     }
                 }
             }
+            if (queen != null) {
+                for (AlienBullet alienBullet : alienBullets) {
+                    if (alienBullet.getX() < 6000) {
+                        killedElements.add(alienBullet);
+                    }
+                    if (alienBullet.collisionBoundIntersectWith(player)) {
+                        if (killPlayer()) return;
+                    }
+                }
+            }
             if (alien.collisionBoundIntersectWith(level.getEggs())) {
                 alien.startJump();
             }
             if (player.collisionBoundIntersectWith(alien) || player.collisionBoundIntersectWith(leftBorder)) {
-                if (player.isDead()) {
-                    return;
-                }
-                player.setDead(true);
-                soundEffectPlayer.playPlayerSoundEffect("player_death.wav");
-                player.decrementLives();
+                if (killPlayer()) return;
             }
         }
+    }
+
+    private boolean killPlayer() {
+        if (player.isDead()) {
+            return true;
+        }
+        player.setDead(true);
+        soundEffectPlayer.playPlayerSoundEffect("player_death.wav");
+        player.decrementLives();
+        return false;
     }
 
     private void killUnwantedEntities(ArrayList<StaticEntity> killedElements) {

@@ -4,6 +4,7 @@ import cegepst.engine.Buffer;
 import cegepst.engine.CollidableRepository;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class AlienQueen extends Alien {
 
@@ -21,7 +22,7 @@ public class AlienQueen extends Alien {
         this.wings = new Wings(this);
         this.soundEffectPlayer = new SoundEffectPlayer();
         this.alienBullets = new ArrayList<>();
-        this.x = 600;
+        this.x = 6400;
         this.y = 200;
         this.nbrLives = 150;
         super.setDimension(AlienSpritesheetInfo.QUEEN_WIDTH, AlienSpritesheetInfo.QUEEN_HEIGHT);
@@ -55,7 +56,7 @@ public class AlienQueen extends Alien {
         attackCooldown--;
         if (attackCooldown <= 0) {
             attack();
-            attackCooldown = 300;
+            attackCooldown = new Random().nextInt(400);
         }
     }
 
@@ -104,7 +105,7 @@ public class AlienQueen extends Alien {
 
     @Override
     public void spawn() {
-        teleport(600, -200);
+        teleport(6400, -200);
         wings.spawn();
         soundEffectPlayer.playlAlienSoundEffect("queen_spawn.wav");
     }
