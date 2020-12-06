@@ -20,6 +20,10 @@ public class MusicPlayer {
         loadMusic(BOSS_MUSIC_PATH);
     }
 
+    public void stop() {
+        player.close();
+    }
+
     private void loadMusic(String musicPath) {
         try {
             FileInputStream fileInputStream = new FileInputStream(musicPath);

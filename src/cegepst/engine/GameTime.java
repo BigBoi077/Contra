@@ -46,6 +46,14 @@ public class GameTime {
         currentFps = 0;
     }
 
+    public static void waitSeconds(int seconds) {
+        try {
+            TimeUnit.SECONDS.sleep(seconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void update() {
         fpsCount++;
         long currentSecond =

@@ -1,5 +1,7 @@
 package cegepst.engine;
 
+import cegepst.GamePad;
+
 import java.awt.event.KeyListener;
 
 public abstract class Game {
@@ -49,5 +51,14 @@ public abstract class Game {
 
     protected void incrementScore(int scoreAdd) {
         this.score += scoreAdd;
+    }
+
+    protected void pause(GamePad gamePad) {
+        while (true) {
+            if (gamePad.isResumePressed()) {
+                return;
+            }
+            continue;
+        }
     }
 }

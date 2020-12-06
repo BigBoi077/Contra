@@ -3,6 +3,7 @@ package cegepst;
 import cegepst.engine.Buffer;
 import cegepst.engine.CollidableRepository;
 import cegepst.engine.Game;
+import cegepst.engine.GameTime;
 import cegepst.engine.entity.StaticEntity;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class ContraGame extends Game {
     private final ArrayList<Alien> aliens;
     private MusicPlayer musicPlayer;
     private AlienTextures alienTextures;
+    private final SoundEffectPlayer soundsRepository;
     private boolean isBossFight = false;
 
     public ContraGame() {
@@ -31,6 +33,7 @@ public class ContraGame extends Game {
         leftBorder = new LeftBorder(player);
         alienSpawner = new AlienSpawner(player);
         bullets = new ArrayList<>();
+        soundsRepository = new SoundEffectPlayer();
         player.teleport(100, 0);
         aliens = alienSpawner.getAliensArray();
     }
@@ -56,15 +59,28 @@ public class ContraGame extends Game {
             leftBorder.update();
         }
         alienSpawner.update();
+        manageKeyPresses();
+        updateEntities();
+        checkToSwitchMusic();
+    }
+
+    private void manageKeyPresses() {
         if (gamePad.isQuitPressed() || player.getNumberLives() == 0) {
+            musicPlayer.stop();
+            soundsRepository.playSoundEffect("game_over.wav");
+            GameTime.waitSeconds(5);
             super.stop();
         }
         if (gamePad.isFirePressed() && player.canFire()) {
             bullets.add(player.fire());
+            soundsRepository.playSoundEffect("gun_shot.wav");
             super.incrementScore(15);
         }
-        updateEntities();
-        checkToSwitchMusic();
+        if (gamePad.isPausePressed()) {
+            soundsRepository.playSoundEffect("pause_sound.wav");
+            super.pause(gamePad);
+            soundsRepository.playSoundEffect("pause_sound.wav");
+        }
     }
 
     private void checkToSwitchMusic() {
