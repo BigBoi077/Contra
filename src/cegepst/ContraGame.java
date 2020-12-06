@@ -21,7 +21,7 @@ public class ContraGame extends Game {
     private final ArrayList<Alien> aliens;
     private MusicPlayer musicPlayer;
     private AlienTextures alienTextures;
-    private final SoundEffectPlayer soundsRepository;
+    private final SoundEffectPlayer soundEffectPlayer;
     private boolean isBossFight = false;
 
     public ContraGame() {
@@ -33,7 +33,7 @@ public class ContraGame extends Game {
         leftBorder = new LeftBorder(player);
         alienSpawner = new AlienSpawner(player);
         bullets = new ArrayList<>();
-        soundsRepository = new SoundEffectPlayer();
+        soundEffectPlayer = new SoundEffectPlayer();
         player.teleport(100, 0);
         aliens = alienSpawner.getAliensArray();
     }
@@ -67,19 +67,19 @@ public class ContraGame extends Game {
     private void manageKeyPresses() {
         if (gamePad.isQuitPressed() || player.getNumberLives() == 0) {
             musicPlayer.stop();
-            soundsRepository.playSoundEffect("game_over.wav");
+            soundEffectPlayer.playSoundEffect("game_over.wav");
             GameTime.waitSeconds(5);
             super.stop();
         }
         if (gamePad.isFirePressed() && player.canFire()) {
             bullets.add(player.fire());
-            soundsRepository.playSoundEffect("gun_shot.wav");
+            soundEffectPlayer.playSoundEffect("gun_shot.wav");
             super.incrementScore(15);
         }
         if (gamePad.isPausePressed()) {
-            soundsRepository.playSoundEffect("pause_sound.wav");
+            soundEffectPlayer.playSoundEffect("pause_sound.wav");
             super.pause(gamePad);
-            soundsRepository.playSoundEffect("pause_sound.wav");
+            soundEffectPlayer.playSoundEffect("pause_sound.wav");
         }
     }
 
@@ -123,7 +123,9 @@ public class ContraGame extends Game {
     private void checkEntitiesCollisions(ArrayList<StaticEntity> killedElements) {
         for (Alien alien : aliens) {
             for (Bullet bullet : bullets) {
-                if (bullet.needToDeleteBullet() || bullet.collisionBoundIntersectWith(level.getEggs())) {
+                if (bullet.needToDeleteBullet() ||
+                        bullet.collisionBoundIntersectWith(level.getEggs()) ||
+                        bullet.intersectWith(leftBorder)) {
                     killedElements.add(bullet);
                 }
                 if (bullet.collisionBoundIntersectWith(alien)) {
@@ -135,7 +137,12 @@ public class ContraGame extends Game {
                 }
             }
             if (player.collisionBoundIntersectWith(alien) || player.collisionBoundIntersectWith(leftBorder)) {
+                if (player.isDead()) {
+                    return;
+                }
                 player.setDead(true);
+                soundEffectPlayer.playPlayerSoundEffect("player_death.wav");
+                player.decrementLives();
             }
         }
     }

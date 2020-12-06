@@ -27,7 +27,7 @@ public class Player extends ControllableEntity {
     private BufferedImage crouchRightFrame;
     private BufferedImage crouchLeftFrame;
     private BufferedImage deathFrame;
-    private final int numberLives;
+    private int numberLives;
     private int fireCooldown;
     private int respawnCooldown;
     private boolean isDead;
@@ -46,6 +46,10 @@ public class Player extends ControllableEntity {
     public Bullet fire() {
         fireCooldown = 10;
         return new Bullet(this);
+    }
+
+    public void decrementLives() {
+        numberLives--;
     }
 
     public Boolean canFire() {
@@ -222,5 +226,9 @@ public class Player extends ControllableEntity {
         if (GameSettings.DEBUG_ENABLED) {
             drawHitBox(buffer);
         }
+    }
+
+    public boolean isDead() {
+        return isDead;
     }
 }
