@@ -61,4 +61,8 @@ public class Animator {
             currentAnimationFrame = 0;
         }
     }
+
+    public int getCurrentFrameIndex() {
+        return currentAnimationFrame;
+    }
 }

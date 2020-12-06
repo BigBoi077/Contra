@@ -2,11 +2,13 @@ package cegepst;
 
 import cegepst.engine.Buffer;
 import cegepst.engine.CollidableRepository;
+import cegepst.engine.GameTime;
 
 public class AlienQueen extends Alien {
 
     private final SoundEffectPlayer soundEffectPlayer;
     private final Wings wings;
+    private boolean spawning;
 
     public AlienQueen() {
         animator = new Animator(this);
@@ -29,7 +31,13 @@ public class AlienQueen extends Alien {
 
     @Override
     public void draw(Buffer buffer) {
+        if (wings.animator.getCurrentFrameIndex() < 2) {
+            wings.draw(buffer);
+        }
         animator.drawCurrentAnimation(mainFrames, buffer, 0);
+        if (wings.animator.getCurrentFrameIndex() >= 2) {
+            wings.draw(buffer);
+        }
     }
 
     @Override
@@ -50,8 +58,9 @@ public class AlienQueen extends Alien {
     @Override
     public void spawn() {
         teleport(600, 200);
+        wings.spawn();
         soundEffectPlayer.playlAlienSoundEffect("queen_spawn.wav");
-        // GameTime.waitSeconds(8);
+        GameTime.waitSeconds(8);
         soundEffectPlayer.playlAlienSoundEffect("queen_roar.wav");
     }
 

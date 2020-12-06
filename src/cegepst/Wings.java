@@ -9,6 +9,7 @@ public class Wings extends Alien {
     public Wings(Alien queen) {
         this.queen = queen;
         animator = new Animator(this);
+        animator.setAnimationSpeed(15);
         initFrames();
     }
 
@@ -29,7 +30,7 @@ public class Wings extends Alien {
 
     @Override
     public void cycleFrames() {
-        animator.cycleFrames(mainFrames);
+        animator.cycleStaticFrames(mainFrames);
     }
 
     @Override
@@ -39,7 +40,7 @@ public class Wings extends Alien {
 
     @Override
     public void spawn() {
-        teleport(queen.getX() + 100, queen.getY() - 200);
+        teleport(queen.getX() + AlienSpritesheetInfo.QUEEN_WIDTH - 60, queen.getY() - 24);
     }
 
     @Override

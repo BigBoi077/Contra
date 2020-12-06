@@ -13,7 +13,7 @@ public class AlienTextures {
     private static Image[] alienQueenFrames;
     private static Image[] alienQueenWingFrames;
     private final String SPRITE_PATH = "images/AliensSpritesResized.png";
-    private final String ALIEN_QUEEN_SPRITE_PATH = "images/AlienBoss.png";
+    private final String ALIEN_QUEEN_SPRITE_PATH = "images/AlienBoss.v1.png";
     private SpriteReader spriteReader;
     private ImagesReader imagesReader;
     private BufferedImage alienSpriteSheet;

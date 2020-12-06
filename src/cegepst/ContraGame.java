@@ -44,10 +44,7 @@ public class ContraGame extends Game {
         bullets.add(new Bullet(player));
         alienTextures = new AlienTextures();
         musicPlayer = new MusicPlayer();
-        queen = new AlienQueen();
         musicPlayer.start();
-
-        queen.spawn();
     }
 
     @Override
@@ -66,7 +63,7 @@ public class ContraGame extends Game {
         alienSpawner.update();
         manageKeyPresses();
         updateEntities();
-        checkToSwitchMusic();
+        checkToSwitchToBossFight();
     }
 
     @Override
@@ -103,7 +100,7 @@ public class ContraGame extends Game {
             for (Bullet bullet : bullets) {
                 if (bullet.needToDeleteBullet() ||
                         bullet.collisionBoundIntersectWith(level.getEggs()) ||
-                        bullet.intersectWith(leftBorder)) {
+                        bullet.collisionBoundIntersectWith(leftBorder)) {
                     killedElements.add(bullet);
                 }
                 if (bullet.collisionBoundIntersectWith(alien)) {
@@ -113,6 +110,9 @@ public class ContraGame extends Game {
                         killedElements.add(alien);
                     }
                 }
+            }
+            if (alien.collisionBoundIntersectWith(level.getEggs())) {
+                alien.startJump();
             }
             if (player.collisionBoundIntersectWith(alien) || player.collisionBoundIntersectWith(leftBorder)) {
                 if (player.isDead()) {
@@ -156,10 +156,12 @@ public class ContraGame extends Game {
         }
     }
 
-    private void checkToSwitchMusic() {
+    private void checkToSwitchToBossFight() {
         if (camera.getxOffset() <= -5920) {
             if (!isBossFight) {
                 musicPlayer.playBossMusic();
+                queen = new AlienQueen();
+                queen.spawn();
             }
             isBossFight = true;
         }
