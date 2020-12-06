@@ -17,9 +17,12 @@ public class ContraGame extends Game {
     private final Camera camera;
     private final HUD hud;
     private final AlienSpawner alienSpawner;
+
+    private final CollisionDetector collisionDetector;
     private final ArrayList<Bullet> bullets;
     private final ArrayList<Alien> aliens;
-    private final SoundEffectPlayer soundEffectPlayer;
+
+    private SoundEffectPlayer soundEffectPlayer;
     private MusicPlayer musicPlayer;
     private AlienTextures alienTextures;
     private AlienQueen queen;
@@ -34,14 +37,14 @@ public class ContraGame extends Game {
         leftBorder = new LeftBorder(player);
         alienSpawner = new AlienSpawner(player);
         bullets = new ArrayList<>();
-        soundEffectPlayer = new SoundEffectPlayer();
         player.teleport(100, 0);
         aliens = alienSpawner.getAliensArray();
+        collisionDetector = new CollisionDetector();
     }
 
     @Override
     public void initialize() {
-        bullets.add(new Bullet(player));
+        soundEffectPlayer = new SoundEffectPlayer();
         alienTextures = new AlienTextures();
         musicPlayer = new MusicPlayer();
         musicPlayer.start();
@@ -93,37 +96,41 @@ public class ContraGame extends Game {
         }
         for (Alien alien : aliens) {
             alien.update();
+            if (alien.collisionBoundIntersectWith(level.getEggs())) {
+                alien.startJump();
+            }
         }
-        ArrayList<StaticEntity> killedElements = new ArrayList<>();
-        checkEntitiesCollisions(killedElements);
-        killUnwantedEntities(killedElements);
+        checkEntitiesCollisions();
     }
 
-    private void checkEntitiesCollisions(ArrayList<StaticEntity> killedElements) {
+    private void checkEntitiesCollisions() {
+
+        collisionDetector.checkCollisions(aliens, bullets);
+        ArrayList<StaticEntity> killedElements = new ArrayList<>();
         ArrayList<AlienBullet> alienBullets = null;
-        if (queen != null) {
-            if (queen.getAlienBullets() != null) {
-                alienBullets = queen.getAlienBullets();
-            }
+        if (isBossFight) {
+            alienBullets = queen.getAlienBullets();
         }
         for (Alien alien : aliens) {
             for (Bullet bullet : bullets) {
-                if (bullet.needToDeleteBullet() ||
-                        bullet.collisionBoundIntersectWith(level.getEggs()) ||
-                        bullet.collisionBoundIntersectWith(leftBorder)) {
+                if (bullet.needToDeleteBullet() || bullet.collisionBoundIntersectWith(level.getEggs()) || bullet.collisionBoundIntersectWith(leftBorder)) {
                     killedElements.add(bullet);
                 }
                 if (bullet.collisionBoundIntersectWith(alien)) {
                     killedElements.add(bullet);
                     alien.decrementHealth();
-                    if (alien.isDead) {
+                    if (alien.nbrLives <= 0) {
+                        alien.setIsDead(true);
+                        CollidableRepository.getInstance().unregisterEntity(alien);
+                    }
+                    if (alien.deathCooldownFinished()) {
                         killedElements.add(alien);
                     }
                 }
             }
-            if (queen != null) {
+            if (isBossFight) {
                 for (AlienBullet alienBullet : alienBullets) {
-                    if (alienBullet.getX() < 6000) {
+                    if (alienBullet.collisionBoundIntersectWith(leftBorder)) {
                         killedElements.add(alienBullet);
                     }
                     if (alienBullet.collisionBoundIntersectWith(player)) {
@@ -131,13 +138,11 @@ public class ContraGame extends Game {
                     }
                 }
             }
-            if (alien.collisionBoundIntersectWith(level.getEggs())) {
-                alien.startJump();
-            }
             if (player.collisionBoundIntersectWith(alien) || player.collisionBoundIntersectWith(leftBorder)) {
                 if (killPlayer()) return;
             }
         }
+        killUnwantedEntities(killedElements);
     }
 
     private boolean killPlayer() {

@@ -118,6 +118,16 @@ public class AlienQueen extends Alien {
         }
     }
 
+    @Override
+    public boolean deathCooldownFinished() {
+        return true;
+    }
+
+    @Override
+    public void setIsDead(boolean b) {
+
+    }
+
     public ArrayList<AlienBullet> getAlienBullets() {
         return alienBullets;
     }

@@ -73,6 +73,11 @@ public class Crawler extends Alien {
         }
     }
 
+    @Override
+    public boolean deathCooldownFinished() {
+        return true;
+    }
+
     public void setIsDead(boolean isDead) {
         super.isDead = isDead;
     }

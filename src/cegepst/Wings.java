@@ -48,4 +48,14 @@ public class Wings extends Alien {
     public void decrementHealth() {
 
     }
+
+    @Override
+    public boolean deathCooldownFinished() {
+        return true;
+    }
+
+    @Override
+    public void setIsDead(boolean b) {
+
+    }
 }

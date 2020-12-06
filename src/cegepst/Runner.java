@@ -6,6 +6,7 @@ import cegepst.engine.CollidableRepository;
 public class Runner extends Alien {
 
     private final Player player;
+    private int deathCooldown = 10;
 
     public Runner(Player player) {
         animator = new Animator(this);
@@ -21,6 +22,12 @@ public class Runner extends Alien {
     @Override
     public void update() {
         if (isDead) {
+            deathCooldown--;
+            if (animator.getCurrentFrameIndex() == 3) {
+                isDead = false;
+                respawn();
+            }
+            cycleFrames();
             return;
         }
         super.update();
@@ -29,6 +36,10 @@ public class Runner extends Alien {
         }
         cycleFrames();
         moveLeft();
+    }
+
+    private void respawn() {
+        teleport(lastX, lastY);
     }
 
     @Override
@@ -54,6 +65,7 @@ public class Runner extends Alien {
     @Override
     public void cycleFrames() {
         if (isDead) {
+            animator.cycleStaticFrames(deathFrames);
             return;
         }
         if (nearPlayer() && player.isJumping()) {
@@ -79,6 +91,11 @@ public class Runner extends Alien {
         if (this.nbrLives == 0) {
             this.isDead = true;
         }
+    }
+
+    @Override
+    public boolean deathCooldownFinished() {
+        return deathCooldown <= 0;
     }
 
     public void setIsDead(boolean isDead) {

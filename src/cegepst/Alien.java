@@ -22,4 +22,8 @@ abstract class Alien extends MovableEntity {
     public abstract void spawn();
 
     public abstract void decrementHealth();
+
+    public abstract boolean deathCooldownFinished();
+
+    public abstract void setIsDead(boolean b);
 }
