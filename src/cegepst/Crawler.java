@@ -2,12 +2,10 @@ package cegepst;
 
 import cegepst.engine.Buffer;
 import cegepst.engine.CollidableRepository;
-import cegepst.engine.controls.Direction;
 
 public class Crawler extends Alien {
 
     private final Player player;
-    private Direction direction;
 
     public Crawler(Player player) {
         animator = new Animator(this);

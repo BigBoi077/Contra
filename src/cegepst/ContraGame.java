@@ -19,9 +19,10 @@ public class ContraGame extends Game {
     private final AlienSpawner alienSpawner;
     private final ArrayList<Bullet> bullets;
     private final ArrayList<Alien> aliens;
+    private final SoundEffectPlayer soundEffectPlayer;
     private MusicPlayer musicPlayer;
     private AlienTextures alienTextures;
-    private final SoundEffectPlayer soundEffectPlayer;
+    private AlienQueen queen;
     private boolean isBossFight = false;
 
     public ContraGame() {
@@ -43,7 +44,10 @@ public class ContraGame extends Game {
         bullets.add(new Bullet(player));
         alienTextures = new AlienTextures();
         musicPlayer = new MusicPlayer();
+        queen = new AlienQueen();
         musicPlayer.start();
+
+        queen.spawn();
     }
 
     @Override
@@ -58,38 +62,11 @@ public class ContraGame extends Game {
             camera.update();
             leftBorder.update();
         }
+        queen.update();
         alienSpawner.update();
         manageKeyPresses();
         updateEntities();
         checkToSwitchMusic();
-    }
-
-    private void manageKeyPresses() {
-        if (gamePad.isQuitPressed() || player.getNumberLives() == 0) {
-            musicPlayer.stop();
-            soundEffectPlayer.playSoundEffect("game_over.wav");
-            GameTime.waitSeconds(5);
-            super.stop();
-        }
-        if (gamePad.isFirePressed() && player.canFire()) {
-            bullets.add(player.fire());
-            soundEffectPlayer.playSoundEffect("gun_shot.wav");
-            super.incrementScore(15);
-        }
-        if (gamePad.isPausePressed()) {
-            soundEffectPlayer.playSoundEffect("pause_sound.wav");
-            super.pause(gamePad);
-            soundEffectPlayer.playSoundEffect("pause_sound.wav");
-        }
-    }
-
-    private void checkToSwitchMusic() {
-        if (camera.getxOffset() <= -5920) {
-            if (!isBossFight) {
-                musicPlayer.playBossMusic();
-            }
-            isBossFight = true;
-        }
     }
 
     @Override
@@ -97,6 +74,7 @@ public class ContraGame extends Game {
         buffer.translate(camera.getxOffset());
         level.draw(buffer);
         leftBorder.draw(buffer);
+        queen.draw(buffer);
         for (Bullet bullet : bullets) {
             bullet.draw(buffer);
         }
@@ -156,6 +134,34 @@ public class ContraGame extends Game {
                 bullets.remove(killedElement);
             }
             CollidableRepository.getInstance().unregisterEntity(killedElement);
+        }
+    }
+
+    private void manageKeyPresses() {
+        if (gamePad.isQuitPressed() || player.getNumberLives() == 0) {
+            musicPlayer.stop();
+            soundEffectPlayer.playSoundEffect("game_over.wav");
+            GameTime.waitSeconds(5);
+            super.stop();
+        }
+        if (gamePad.isFirePressed() && player.canFire()) {
+            bullets.add(player.fire());
+            soundEffectPlayer.playSoundEffect("gun_shot.wav");
+            super.incrementScore(15);
+        }
+        if (gamePad.isPausePressed()) {
+            soundEffectPlayer.playSoundEffect("pause_sound.wav");
+            super.pause(gamePad);
+            soundEffectPlayer.playSoundEffect("pause_sound.wav");
+        }
+    }
+
+    private void checkToSwitchMusic() {
+        if (camera.getxOffset() <= -5920) {
+            if (!isBossFight) {
+                musicPlayer.playBossMusic();
+            }
+            isBossFight = true;
         }
     }
 }

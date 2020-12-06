@@ -8,9 +8,9 @@ import java.awt.image.BufferedImage;
 
 public class Animator {
 
-    private static final int ANIMATION_SPEED = 8;
+    private static int animationSpeed = 8;
     private final MovableEntity entity;
-    private int nextFrame = ANIMATION_SPEED;
+    private int nextFrame = animationSpeed;
     protected int currentAnimationFrame;
 
     public Animator(MovableEntity entity) {
@@ -25,10 +25,21 @@ public class Animator {
                 if (currentAnimationFrame >= frames.length) {
                     currentAnimationFrame = 0;
                 }
-                nextFrame = ANIMATION_SPEED;
+                nextFrame = animationSpeed;
             }
         } else {
             currentAnimationFrame = 1;
+        }
+    }
+
+    public void cycleStaticFrames(Image[] frames) {
+        --nextFrame;
+        if (nextFrame == 0) {
+            ++currentAnimationFrame;
+            if (currentAnimationFrame >= frames.length) {
+                currentAnimationFrame = 0;
+            }
+            nextFrame = animationSpeed;
         }
     }
 
@@ -39,6 +50,10 @@ public class Animator {
     public void drawCurrentAnimation(Image[] frames, Buffer buffer, int xOffset) {
         checkFrameIndex(frames);
         buffer.drawImage(frames[currentAnimationFrame], entity.getX() + xOffset, entity.getY());
+    }
+
+    public void setAnimationSpeed(int animationSpeed) {
+        Animator.animationSpeed = animationSpeed;
     }
 
     private void checkFrameIndex(Image[] frames) {

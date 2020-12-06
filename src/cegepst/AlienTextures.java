@@ -76,7 +76,7 @@ public class AlienTextures {
         spriteReader.readRightSpriteSheet(mainRunnerFrames, AlienSpritesheetInfo.RUNNER_START_X, AlienSpritesheetInfo.RUNNER_START_Y, AlienSpritesheetInfo.RUNNER_WIDTH, AlienSpritesheetInfo.RUNNER_HEIGHT, mainRunnerFrames.length);
         spriteReader.readRightSpriteSheet(attackRunnerFrames, AlienSpritesheetInfo.RUNNER_ATTACK_START_X, AlienSpritesheetInfo.RUNNER_ATTACK_START_Y, AlienSpritesheetInfo.RUNNER_ATTACK_WIDTH, AlienSpritesheetInfo.RUNNER_HEIGHT, attackRunnerFrames.length);
         spriteReader.readRightSpriteSheet(deathRunnerFrames, AlienSpritesheetInfo.RUNNER_DEATH_START_X, AlienSpritesheetInfo.RUNNER_DEATH_START_Y, AlienSpritesheetInfo.RUNNER_DEATH_FRAMES_WIDTH, AlienSpritesheetInfo.RUNNER_DEATH_FRAMES_HEIGHT, deathRunnerFrames.length);
-        this.spriteReader = new SpriteReader(alienQueenSpriteSheet);
+        SpriteReader spriteReader = new SpriteReader(alienQueenSpriteSheet);
         spriteReader.readRightSpriteSheet(alienQueenFrames, AlienSpritesheetInfo.QUEEN_START_X, AlienSpritesheetInfo.QUEEN_START_Y, AlienSpritesheetInfo.QUEEN_WIDTH, AlienSpritesheetInfo.QUEEN_HEIGHT, alienQueenFrames.length);
         spriteReader.readRightSpriteSheet(alienQueenWingFrames, AlienSpritesheetInfo.QUEEN_WINGS_START_X, AlienSpritesheetInfo.QUEEN_WINGS_START_Y, AlienSpritesheetInfo.QUEEN_WINGS_WIDTH, AlienSpritesheetInfo.QUEEN_WINGS_HEIGHT, alienQueenWingFrames.length);
     }

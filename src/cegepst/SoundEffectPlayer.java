@@ -20,7 +20,7 @@ public class SoundEffectPlayer {
     public void playlAlienSoundEffect(String soundEffectName) {
         try {
             Clip clip = AudioSystem.getClip();
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(this.getClass().getClassLoader().getResourceAsStream("sounds/ennemy/" + soundEffectName));
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(this.getClass().getClassLoader().getResourceAsStream("sounds/enemy/" + soundEffectName));
             clip.open(inputStream);
             clip.start();
         } catch (Exception e) {
