@@ -2,24 +2,40 @@ package cegepst;
 
 import cegepst.engine.Buffer;
 import cegepst.engine.CollidableRepository;
-import cegepst.engine.GameTime;
+
+import java.util.ArrayList;
 
 public class AlienQueen extends Alien {
 
     private final SoundEffectPlayer soundEffectPlayer;
     private final Wings wings;
+    private final LeftBorder leftBorder;
+    private final ArrayList<AlienBullet> alienBullets;
+    private Player player;
+    private boolean attacking;
     private boolean spawning;
 
-    public AlienQueen() {
-        animator = new Animator(this);
-        animator.setAnimationSpeed(10);
-        wings = new Wings(this);
-        soundEffectPlayer = new SoundEffectPlayer();
-        nbrLives = 150;
+    public AlienQueen(LeftBorder leftBorder, Player player) {
+        this.leftBorder = leftBorder;
+        this.animator = new Animator(this);
+        this.animator.setAnimationSpeed(10);
+        this.wings = new Wings(this);
+        this.soundEffectPlayer = new SoundEffectPlayer();
+        this.alienBullets = new ArrayList<>();
+        this.x = 600;
+        this.y = 200;
+        this.nbrLives = 150;
         super.setDimension(AlienSpritesheetInfo.QUEEN_WIDTH, AlienSpritesheetInfo.QUEEN_HEIGHT);
         super.isGravityApplied = false;
         initFrames();
         CollidableRepository.getInstance().registerEntity(this);
+        attack();
+    }
+
+    private void attack() {
+        for (int i = 0, lastY = this.y; i < 5; i++, lastY += 40) {
+            alienBullets.add(new AlienBullet(this, this.x, lastY));
+        }
     }
 
     @Override
@@ -27,6 +43,14 @@ public class AlienQueen extends Alien {
         super.update();
         cycleFrames();
         wings.update();
+        for (AlienBullet bullet : alienBullets) {
+            bullet.update();
+        }
+        for (AlienBullet bullet : alienBullets) {
+            if (bullet.collisionBoundIntersectWith(leftBorder)) {
+                alienBullets.remove(bullet);
+            }
+        }
     }
 
     @Override
@@ -37,6 +61,9 @@ public class AlienQueen extends Alien {
         animator.drawCurrentAnimation(mainFrames, buffer, 0);
         if (wings.animator.getCurrentFrameIndex() >= 2) {
             wings.draw(buffer);
+        }
+        for (AlienBullet bullet : alienBullets) {
+            bullet.draw(buffer);
         }
     }
 
@@ -60,7 +87,7 @@ public class AlienQueen extends Alien {
         teleport(600, 200);
         wings.spawn();
         soundEffectPlayer.playlAlienSoundEffect("queen_spawn.wav");
-        GameTime.waitSeconds(8);
+        // GameTime.waitSeconds(8);
         soundEffectPlayer.playlAlienSoundEffect("queen_roar.wav");
     }
 

@@ -45,6 +45,9 @@ public class ContraGame extends Game {
         alienTextures = new AlienTextures();
         musicPlayer = new MusicPlayer();
         musicPlayer.start();
+
+        queen = new AlienQueen(leftBorder, player);
+        queen.spawn();
     }
 
     @Override
@@ -56,8 +59,8 @@ public class ContraGame extends Game {
     public void update() {
         player.update();
         if (camera.getxOffset() >= -5920) {
-            camera.update();
-            leftBorder.update();
+            // camera.update();
+            // leftBorder.update();
         }
         queen.update();
         alienSpawner.update();
@@ -160,7 +163,7 @@ public class ContraGame extends Game {
         if (camera.getxOffset() <= -5920) {
             if (!isBossFight) {
                 musicPlayer.playBossMusic();
-                queen = new AlienQueen();
+                queen = new AlienQueen(leftBorder, player);
                 queen.spawn();
             }
             isBossFight = true;

@@ -40,7 +40,6 @@ public abstract class MovableEntity extends UpdatableEntity {
                 }
             }
         }
-
         moved = (x != lastX || y != lastY);
         lastX = x;
         lastY = y;
@@ -93,7 +92,6 @@ public abstract class MovableEntity extends UpdatableEntity {
     }
 
     public void moveUp() {
-        // Force to use semantic methods jump
         if (GameSettings.GRAVITY_ENABLED && isGravityApplied) {
             return;
         }
