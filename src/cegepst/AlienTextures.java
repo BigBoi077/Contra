@@ -10,10 +10,14 @@ public class AlienTextures {
     private static Image[] mainRunnerFrames;
     private static Image[] attackRunnerFrames;
     private static Image[] deathRunnerFrames;
+    private static Image[] alienQueenFrames;
+    private static Image[] alienQueenWingFrames;
     private final String SPRITE_PATH = "images/AliensSpritesResized.png";
+    private final String ALIEN_QUEEN_SPRITE_PATH = "images/AlienBoss.png";
     private SpriteReader spriteReader;
     private ImagesReader imagesReader;
-    private BufferedImage spritesheet;
+    private BufferedImage alienSpriteSheet;
+    private BufferedImage alienQueenSpriteSheet;
 
     public AlienTextures() {
         initSpritesheet();
@@ -41,18 +45,29 @@ public class AlienTextures {
         return deathRunnerFrames;
     }
 
+    public static Image[] getAlienQueenFrames() {
+        return alienQueenFrames;
+    }
+
+    public static Image[] getAlienQueenWingFrames() {
+        return alienQueenWingFrames;
+    }
+
     private void initFrames() {
         mainCrawlerFrames = new Image[4];
         attackCrawlerFrames = new Image[2];
         mainRunnerFrames = new Image[6];
         attackRunnerFrames = new Image[2];
         deathRunnerFrames = new Image[4];
+        alienQueenFrames = new Image[3];
+        alienQueenWingFrames = new Image[3];
     }
 
     public void initSpritesheet() {
         imagesReader = new ImagesReader();
-        spritesheet = imagesReader.readImage(SPRITE_PATH);
-        this.spriteReader = new SpriteReader(spritesheet);
+        alienSpriteSheet = imagesReader.readImage(SPRITE_PATH);
+        alienQueenSpriteSheet = imagesReader.readImage(ALIEN_QUEEN_SPRITE_PATH);
+        this.spriteReader = new SpriteReader(alienSpriteSheet);
     }
 
     public void readSprites() {
@@ -61,5 +76,8 @@ public class AlienTextures {
         spriteReader.readRightSpriteSheet(mainRunnerFrames, AlienSpritesheetInfo.RUNNER_START_X, AlienSpritesheetInfo.RUNNER_START_Y, AlienSpritesheetInfo.RUNNER_WIDTH, AlienSpritesheetInfo.RUNNER_HEIGHT, mainRunnerFrames.length);
         spriteReader.readRightSpriteSheet(attackRunnerFrames, AlienSpritesheetInfo.RUNNER_ATTACK_START_X, AlienSpritesheetInfo.RUNNER_ATTACK_START_Y, AlienSpritesheetInfo.RUNNER_ATTACK_WIDTH, AlienSpritesheetInfo.RUNNER_HEIGHT, attackRunnerFrames.length);
         spriteReader.readRightSpriteSheet(deathRunnerFrames, AlienSpritesheetInfo.RUNNER_DEATH_START_X, AlienSpritesheetInfo.RUNNER_DEATH_START_Y, AlienSpritesheetInfo.RUNNER_DEATH_FRAMES_WIDTH, AlienSpritesheetInfo.RUNNER_DEATH_FRAMES_HEIGHT, deathRunnerFrames.length);
+        this.spriteReader = new SpriteReader(alienQueenSpriteSheet);
+        spriteReader.readRightSpriteSheet(alienQueenFrames, AlienSpritesheetInfo.QUEEN_START_X, AlienSpritesheetInfo.QUEEN_START_Y, AlienSpritesheetInfo.QUEEN_WIDTH, AlienSpritesheetInfo.QUEEN_HEIGHT, alienQueenFrames.length);
+        spriteReader.readRightSpriteSheet(alienQueenWingFrames, AlienSpritesheetInfo.QUEEN_WINGS_START_X, AlienSpritesheetInfo.QUEEN_WINGS_START_Y, AlienSpritesheetInfo.QUEEN_WINGS_WIDTH, AlienSpritesheetInfo.QUEEN_WINGS_HEIGHT, alienQueenWingFrames.length);
     }
 }

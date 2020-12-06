@@ -3,6 +3,8 @@ package cegepst;
 import cegepst.engine.Buffer;
 
 public class AlienQueen extends Alien {
+
+
     @Override
     public void initFrames() {
 
