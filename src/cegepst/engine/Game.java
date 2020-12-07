@@ -49,7 +49,7 @@ public abstract class Game {
         renderingEngine.stop();
     }
 
-    protected void incrementScore(int scoreAdd) {
+    public void incrementScore(int scoreAdd) {
         this.score += scoreAdd;
     }
 

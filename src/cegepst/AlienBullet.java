@@ -12,7 +12,7 @@ public class AlienBullet extends MovableEntity {
     private final BufferedImage bulletFrame;
 
     public AlienBullet(Alien queen, int x, int y) {
-        this.setDimension(13, 13);
+        this.setDimension(20, 20);
         this.queen = queen;
         this.bulletFrame = AlienTextures.getAlienBullet();
         this.isGravityApplied = false;

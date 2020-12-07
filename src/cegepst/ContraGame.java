@@ -1,10 +1,8 @@
 package cegepst;
 
 import cegepst.engine.Buffer;
-import cegepst.engine.CollidableRepository;
 import cegepst.engine.Game;
 import cegepst.engine.GameTime;
-import cegepst.engine.entity.StaticEntity;
 
 import java.util.ArrayList;
 
@@ -31,7 +29,7 @@ public class ContraGame extends Game {
     public ContraGame() {
         gamePad = new GamePad();
         level = new World();
-        player = new Player(gamePad);
+        player = new Player(gamePad, this);
         camera = new Camera(0);
         hud = new HUD();
         leftBorder = new LeftBorder(player);
@@ -39,7 +37,7 @@ public class ContraGame extends Game {
         bullets = new ArrayList<>();
         player.teleport(100, 0);
         aliens = alienSpawner.getAliensArray();
-        collisionDetector = new CollisionDetector();
+        collisionDetector = new CollisionDetector(this);
     }
 
     @Override
@@ -52,13 +50,13 @@ public class ContraGame extends Game {
 
     @Override
     public void conclude() {
-
+        musicPlayer.stop();
     }
 
     @Override
     public void update() {
         player.update();
-        if (camera.getxOffset() >= -5920) {
+        if (camera.getxOffset() >= -5915) {
             camera.update();
             leftBorder.update();
         }
@@ -104,48 +102,15 @@ public class ContraGame extends Game {
     }
 
     private void checkEntitiesCollisions() {
-
         collisionDetector.checkCollisions(aliens, bullets);
-        ArrayList<StaticEntity> killedElements = new ArrayList<>();
-        ArrayList<AlienBullet> alienBullets = null;
         if (isBossFight) {
-            alienBullets = queen.getAlienBullets();
+            ArrayList<AlienBullet> alienBullets = queen.getAlienBullets();
+            collisionDetector.checkAlienBulletCollision(alienBullets, bullets, player);
+            collisionDetector.checkQueenCollisions(bullets, queen, player);
         }
-        for (Alien alien : aliens) {
-            for (Bullet bullet : bullets) {
-                if (bullet.needToDeleteBullet() || bullet.collisionBoundIntersectWith(level.getEggs()) || bullet.collisionBoundIntersectWith(leftBorder)) {
-                    killedElements.add(bullet);
-                }
-                if (bullet.collisionBoundIntersectWith(alien)) {
-                    killedElements.add(bullet);
-                    alien.decrementHealth();
-                    if (alien.nbrLives <= 0) {
-                        alien.setIsDead(true);
-                        CollidableRepository.getInstance().unregisterEntity(alien);
-                    }
-                    if (alien.deathCooldownFinished()) {
-                        killedElements.add(alien);
-                    }
-                }
-            }
-            if (isBossFight) {
-                for (AlienBullet alienBullet : alienBullets) {
-                    if (alienBullet.collisionBoundIntersectWith(leftBorder)) {
-                        killedElements.add(alienBullet);
-                    }
-                    if (alienBullet.collisionBoundIntersectWith(player)) {
-                        if (killPlayer()) return;
-                    }
-                }
-            }
-            if (player.collisionBoundIntersectWith(alien) || player.collisionBoundIntersectWith(leftBorder)) {
-                if (killPlayer()) return;
-            }
-        }
-        killUnwantedEntities(killedElements);
     }
 
-    private boolean killPlayer() {
+    public boolean killPlayer() {
         if (player.isDead()) {
             return true;
         }
@@ -153,18 +118,6 @@ public class ContraGame extends Game {
         soundEffectPlayer.playPlayerSoundEffect("player_death.wav");
         player.decrementLives();
         return false;
-    }
-
-    private void killUnwantedEntities(ArrayList<StaticEntity> killedElements) {
-        for (StaticEntity killedElement : killedElements) {
-            if (killedElement instanceof Alien) {
-                aliens.remove(killedElement);
-                super.incrementScore(50);
-            } else if (killedElement instanceof Bullet) {
-                bullets.remove(killedElement);
-            }
-            CollidableRepository.getInstance().unregisterEntity(killedElement);
-        }
     }
 
     private void manageKeyPresses() {
@@ -187,7 +140,7 @@ public class ContraGame extends Game {
     }
 
     private void checkToSwitchToBossFight() {
-        if (camera.getxOffset() <= -5920) {
+        if (camera.getxOffset() <= -5915) {
             if (!isBossFight) {
                 musicPlayer.playBossMusic();
                 queen = new AlienQueen(leftBorder);
@@ -195,5 +148,21 @@ public class ContraGame extends Game {
             }
             isBossFight = true;
         }
+    }
+
+    public LeftBorder getLeftBorder() {
+        return leftBorder;
+    }
+
+    public World getLevel() {
+        return level;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public boolean isBossFight() {
+        return isBossFight;
     }
 }

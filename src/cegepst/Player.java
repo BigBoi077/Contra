@@ -14,6 +14,7 @@ public class Player extends ControllableEntity {
 
     private static final String SPRITE_PATH = "images/PlayerSpritesResized.png";
     private final GamePad gamePad;
+    private final ContraGame contraGame;
     private SpriteReader spriteReader;
     private BufferedImage spriteSheet;
     private Animator animator;
@@ -32,10 +33,11 @@ public class Player extends ControllableEntity {
     private int respawnCooldown;
     private boolean isDead;
 
-    public Player(GamePad gamePad) {
+    public Player(GamePad gamePad, ContraGame contraGame) {
         super(gamePad);
         super.isGravityApplied = true;
         this.gamePad = gamePad;
+        this.contraGame = contraGame;
         this.numberLives = GameSettings.NUMBER_PLAYER_LIVES;
         super.setDimension(87, 102);
         super.setSpeed(2);
@@ -202,7 +204,11 @@ public class Player extends ControllableEntity {
     }
 
     private void respawn() {
-        super.teleport(lastX + 150, 150);
+        if (contraGame.isBossFight()) {
+            super.teleport(6050, 100);
+        } else {
+            super.teleport(lastX + 150, 150);
+        }
     }
 
     private boolean isRunning() {
