@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GameTime {
 
-    private static final int FPS_TARGET = 60;
+    private static final int FPS_TARGET = 120;
     private static int currentFps;
     private static int fpsCount;
     private static long fpsTimeDelta;

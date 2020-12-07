@@ -55,6 +55,7 @@ public class ContraGame extends Game {
 
     @Override
     public void update() {
+        Debuger.consoleLog(GameTime.getCurrentFps());
         player.update();
         if (camera.getxOffset() >= -5915) {
             camera.update();
