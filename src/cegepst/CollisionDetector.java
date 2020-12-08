@@ -30,8 +30,6 @@ public class CollisionDetector {
                     killedElements.add(bullet);
                     if (alien instanceof Runner) {
                         soundEffectPlayer.playSoundEffect("runner_pre_death.wav", "enemy");
-                    } else if (alien instanceof Crawler) {
-                        soundEffectPlayer.playSoundEffect("crawler_death.wav", "enemy");
                     }
                     manageAlienDeath(alien);
                 }
@@ -47,6 +45,10 @@ public class CollisionDetector {
         contraGame.incrementScore(50);
         alien.decrementHealth();
         if (alien.nbrLives <= 0) {
+            if (alien instanceof Crawler) {
+                soundEffectPlayer.playSoundEffect("crawler_death.wav", "enemy");
+                killedElements.add(alien);
+            }
             alien.setIsDead(true);
             CollidableRepository.getInstance().unregisterEntity(alien);
         }
@@ -59,9 +61,10 @@ public class CollisionDetector {
     }
 
     public void checkAlienBulletCollision(ArrayList<AlienBullet> alienBullets, ArrayList<Bullet> bullets, Player player) {
+        LeftBorder leftBorder = contraGame.getLeftBorder();
         for (AlienBullet alienBullet : alienBullets) {
             for (Bullet bullet : bullets) {
-                if (alienBullet.collisionBoundIntersectWith(contraGame.getLeftBorder())) {
+                if (alienBullet.collisionBoundIntersectWith(leftBorder)) {
                     killedElements.add(alienBullet);
                 }
                 if (alienBullet.collisionBoundIntersectWith(player)) {
@@ -102,6 +105,12 @@ public class CollisionDetector {
         for (Bullet bullet : bullets) {
             if (bullet.collisionBoundIntersectWith(queen)) {
                 killedElements.add(bullet);
+                queen.decrementHealth();
+                if (queen.nbrLives <= 0) {
+                    queen.playDeathSound();
+                    contraGame.isWinner();
+                    contraGame.conclude();
+                }
             }
         }
         killUnwantedEntities(null, bullets);

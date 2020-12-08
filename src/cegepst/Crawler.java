@@ -9,8 +9,8 @@ public class Crawler extends Alien {
 
     public Crawler(Player player) {
         animator = new Animator(this);
-        nbrLives = 1;
-        super.setSpeed(1);
+        nbrLives = 3;
+        super.setSpeed(6);
         super.setDimension(AlienSpritesheetInfo.CRAWLER_WIDTH, AlienSpritesheetInfo.CRAWLER_HEIGHT);
         super.isGravityApplied = true;
         this.player = player;
@@ -75,7 +75,7 @@ public class Crawler extends Alien {
 
     @Override
     public boolean deathCooldownFinished() {
-        return true;
+        return false;
     }
 
     public void setIsDead(boolean isDead) {

@@ -12,6 +12,7 @@ public class AlienQueen extends Alien {
     private final Wings wings;
     private final LeftBorder leftBorder;
     private final ArrayList<AlienBullet> alienBullets;
+    private final Random random;
     private int attackCooldown = 300;
     private int spawnCooldown = 480;
 
@@ -22,9 +23,10 @@ public class AlienQueen extends Alien {
         this.wings = new Wings(this);
         this.soundEffectPlayer = new SoundEffectPlayer();
         this.alienBullets = new ArrayList<>();
+        this.random = new Random();
         this.x = 6400;
         this.y = 200;
-        this.nbrLives = 150;
+        this.nbrLives = 20;
         super.setDimension(AlienSpritesheetInfo.QUEEN_WIDTH, AlienSpritesheetInfo.QUEEN_HEIGHT);
         super.isGravityApplied = false;
         initFrames();
@@ -33,7 +35,7 @@ public class AlienQueen extends Alien {
 
     private void attack() {
         soundEffectPlayer.playSoundEffect("alien_attack.wav", "enemy");
-        for (int i = 0, lastY = this.y, lastX = this.x; i < 5; i++, lastY += 40, lastX += 10) {
+        for (int i = 0, lastY = this.y, lastX = this.x; i < 5; i++, lastY += 45, lastX += random.nextInt(20)) {
             alienBullets.add(new AlienBullet(this, lastX, lastY));
         }
     }
@@ -130,5 +132,9 @@ public class AlienQueen extends Alien {
 
     public ArrayList<AlienBullet> getAlienBullets() {
         return alienBullets;
+    }
+
+    public void playDeathSound() {
+        soundEffectPlayer.playSoundEffect("queen_death.wav", "enemy");
     }
 }

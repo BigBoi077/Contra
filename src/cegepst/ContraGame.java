@@ -25,6 +25,7 @@ public class ContraGame extends Game {
     private AlienTextures alienTextures;
     private AlienQueen queen;
     private boolean isBossFight = false;
+    private boolean isWinner = false;
 
     public ContraGame() {
         gamePad = new GamePad();
@@ -51,11 +52,14 @@ public class ContraGame extends Game {
     @Override
     public void conclude() {
         musicPlayer.stop();
+        if (isWinner) {
+            soundEffectPlayer.playSoundEffect("level_win.wav", "effects");
+        }
+        super.playing = false;
     }
 
     @Override
     public void update() {
-        Debuger.consoleLog(GameTime.getCurrentFps());
         player.update();
         if (camera.getxOffset() >= -5915) {
             camera.update();
@@ -161,6 +165,10 @@ public class ContraGame extends Game {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public void isWinner() {
+        this.isWinner = true;
     }
 
     public boolean isBossFight() {
