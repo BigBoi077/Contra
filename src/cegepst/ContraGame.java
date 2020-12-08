@@ -3,6 +3,7 @@ package cegepst;
 import cegepst.engine.Buffer;
 import cegepst.engine.Game;
 import cegepst.engine.GameTime;
+import cegepst.engine.RenderingEngine;
 
 import java.util.ArrayList;
 
@@ -47,6 +48,8 @@ public class ContraGame extends Game {
         alienTextures = new AlienTextures();
         musicPlayer = new MusicPlayer();
         musicPlayer.start();
+        RenderingEngine.getInstance().getScreen().hideCursor();
+        RenderingEngine.getInstance().getScreen().fullScreen();
     }
 
     @Override
@@ -54,6 +57,7 @@ public class ContraGame extends Game {
         musicPlayer.stop();
         if (isWinner) {
             soundEffectPlayer.playSoundEffect("level_win.wav", "effects");
+            GameTime.waitSeconds(6);
         }
         super.playing = false;
     }

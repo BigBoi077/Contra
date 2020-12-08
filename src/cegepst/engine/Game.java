@@ -8,6 +8,7 @@ public abstract class Game {
 
     private final RenderingEngine renderingEngine;
     private GameTime gameTime;
+    protected Screen screen;
     protected boolean playing = true;
     protected int score;
 

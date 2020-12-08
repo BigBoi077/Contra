@@ -9,6 +9,7 @@ public class RenderingEngine {
 
     private final String ICON_PATH = "resources/images/Gava.png";
     private static RenderingEngine instance;
+    private Screen screen;
     private ImageIcon imageIcon;
     private JFrame frame;
     private JPanel panel;
@@ -22,12 +23,11 @@ public class RenderingEngine {
     }
 
     public void start() {
-        frame.setVisible(true);
+        screen.start();
     }
 
     public void stop() {
-        frame.setVisible(false);
-        frame.dispose();
+        screen.end();
     }
 
     public Buffer getRenderingBuffer() {
@@ -49,6 +49,14 @@ public class RenderingEngine {
         panel.addKeyListener(listener);
     }
 
+    public void loadGameIcon() {
+        imageIcon = new ImageIcon(ICON_PATH);
+    }
+
+    public Screen getScreen() {
+        return screen;
+    }
+
     private RenderingEngine() {
         initializeFrame();
         initializePanel();
@@ -59,19 +67,15 @@ public class RenderingEngine {
         panel.setBackground(Color.blue);
         panel.setFocusable(true);
         panel.setDoubleBuffered(true);
-        frame.add(panel);
+        screen.setPanel(panel);
     }
 
     private void initializeFrame() {
         loadGameIcon();
-        frame = new JFrame();
-        frame.setIconImage(imageIcon.getImage());
-        frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.setTitle("Contra");
-        frame.setUndecorated(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        screen = new Screen();
+        screen.setIconImage(imageIcon.getImage());
+        screen.setTitle("Contra");
+        screen.setSize(800, 600);
     }
 
     private RenderingHints getOptimalRenderingHints() {
@@ -81,8 +85,5 @@ public class RenderingEngine {
         rh.put(RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_QUALITY);
         return rh;
-    }
-    public void loadGameIcon() {
-        imageIcon = new ImageIcon(ICON_PATH);
     }
 }
