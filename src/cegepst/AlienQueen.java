@@ -32,7 +32,7 @@ public class AlienQueen extends Alien {
     }
 
     private void attack() {
-        soundEffectPlayer.playlAlienSoundEffect("alien_attack.wav");
+        soundEffectPlayer.playSoundEffect("alien_attack.wav", "enemy");
         for (int i = 0, lastY = this.y, lastX = this.x; i < 5; i++, lastY += 40, lastX += 10) {
             alienBullets.add(new AlienBullet(this, lastX, lastY));
         }
@@ -66,7 +66,7 @@ public class AlienQueen extends Alien {
         moveDown();
         spawnCooldown--;
         if (spawnCooldown <= 5) {
-            soundEffectPlayer.playlAlienSoundEffect("queen_roar.wav");
+            soundEffectPlayer.playSoundEffect("queen_roar.wav", "enemy");
         }
     }
 
@@ -107,7 +107,7 @@ public class AlienQueen extends Alien {
     public void spawn() {
         teleport(6400, -200);
         wings.spawn();
-        soundEffectPlayer.playlAlienSoundEffect("queen_spawn.wav");
+        soundEffectPlayer.playSoundEffect("queen_spawn.wav", "enemy");
     }
 
     @Override

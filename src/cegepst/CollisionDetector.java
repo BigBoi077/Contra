@@ -29,9 +29,9 @@ public class CollisionDetector {
                 if (bullet.collisionBoundIntersectWith(alien)) {
                     killedElements.add(bullet);
                     if (alien instanceof Runner) {
-                        soundEffectPlayer.playlAlienSoundEffect("runner_pre_death.wav");
+                        soundEffectPlayer.playSoundEffect("runner_pre_death.wav", "enemy");
                     } else if (alien instanceof Crawler) {
-                        soundEffectPlayer.playlAlienSoundEffect("crawler_death.wav");
+                        soundEffectPlayer.playSoundEffect("crawler_death.wav", "enemy");
                     }
                     manageAlienDeath(alien);
                 }
@@ -52,7 +52,7 @@ public class CollisionDetector {
         }
         if (alien.deathCooldownFinished()) {
             if (alien instanceof Runner) {
-                soundEffectPlayer.playlAlienSoundEffect("runner_death.wav");
+                soundEffectPlayer.playSoundEffect("runner_death.wav", "enemy");
             }
             killedElements.add(alien);
         }

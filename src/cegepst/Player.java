@@ -28,6 +28,7 @@ public class Player extends ControllableEntity {
     private BufferedImage crouchRightFrame;
     private BufferedImage crouchLeftFrame;
     private BufferedImage deathFrame;
+    private final SoundEffectPlayer soundEffectPlayer;
     private int numberLives;
     private int fireCooldown;
     private int respawnCooldown;
@@ -36,11 +37,12 @@ public class Player extends ControllableEntity {
     public Player(GamePad gamePad, ContraGame contraGame) {
         super(gamePad);
         super.isGravityApplied = true;
+        super.setDimension(87, 102);
+        super.setSpeed(2);
         this.gamePad = gamePad;
         this.contraGame = contraGame;
         this.numberLives = GameSettings.NUMBER_PLAYER_LIVES;
-        super.setDimension(87, 102);
-        super.setSpeed(2);
+        this.soundEffectPlayer = new SoundEffectPlayer();
         initClassContent();
         CollidableRepository.getInstance().registerEntity(this);
     }
@@ -204,6 +206,7 @@ public class Player extends ControllableEntity {
     }
 
     private void respawn() {
+        soundEffectPlayer.playRandomRespawnSound();
         if (contraGame.isBossFight()) {
             super.teleport(6050, 100);
         } else {

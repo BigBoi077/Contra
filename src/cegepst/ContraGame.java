@@ -116,7 +116,7 @@ public class ContraGame extends Game {
             return true;
         }
         player.setDead(true);
-        soundEffectPlayer.playPlayerSoundEffect("player_death.wav");
+        soundEffectPlayer.playSoundEffect("player_death.wav", "player");
         player.decrementLives();
         return false;
     }
@@ -124,19 +124,19 @@ public class ContraGame extends Game {
     private void manageKeyPresses() {
         if (gamePad.isQuitPressed() || player.getNumberLives() == 0) {
             musicPlayer.stop();
-            soundEffectPlayer.playSoundEffect("game_over.wav");
+            soundEffectPlayer.playSoundEffect("game_over.wav", "effects");
             GameTime.waitSeconds(5);
             super.stop();
         }
         if (gamePad.isFirePressed() && player.canFire()) {
             bullets.add(player.fire());
-            soundEffectPlayer.playSoundEffect("gun_shot.wav");
+            soundEffectPlayer.playSoundEffect("gun_shot.wav", "effects");
             super.incrementScore(15);
         }
         if (gamePad.isPausePressed()) {
-            soundEffectPlayer.playSoundEffect("pause_sound.wav");
+            soundEffectPlayer.playSoundEffect("pause_sound.wav", "effects");
             super.pause(gamePad);
-            soundEffectPlayer.playSoundEffect("pause_sound.wav");
+            soundEffectPlayer.playSoundEffect("pause_sound.wav", "effects");
         }
     }
 
