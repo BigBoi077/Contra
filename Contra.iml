@@ -8,10 +8,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/jlayer1.0.1/JLayer1.0.1/jl1.0.1.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/jl1.0.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
