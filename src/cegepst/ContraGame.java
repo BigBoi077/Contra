@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class ContraGame extends Game {
 
+    private final int CAMERA_STOP = -5915;
+
     private final Player player;
     private final GamePad gamePad;
     private final World level;
@@ -65,7 +67,7 @@ public class ContraGame extends Game {
     @Override
     public void update() {
         player.update();
-        if (camera.getxOffset() >= -5915) {
+        if (camera.getxOffset() >= CAMERA_STOP) {
             camera.update();
             leftBorder.update();
         }
@@ -149,7 +151,7 @@ public class ContraGame extends Game {
     }
 
     private void checkToSwitchToBossFight() {
-        if (camera.getxOffset() <= -5915) {
+        if (camera.getxOffset() <= CAMERA_STOP) {
             if (!isBossFight) {
                 musicPlayer.playBossMusic();
                 queen = new AlienQueen(leftBorder);
